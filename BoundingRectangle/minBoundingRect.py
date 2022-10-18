@@ -71,6 +71,5 @@ for image in glob.glob("Images/*.png"):
     #cv2.imwrite(os.path.join("test1", newImage), resizedImg)
 
 
-
     #cv2.waitKey(0)
 
