@@ -64,11 +64,11 @@ for image in glob.glob("Images/*.png"):
 
     # substring for image name
     newImage = image[7:]
-    cv2.imwrite(os.path.join("CroppedImages" , newImage), cropped_image)
+    cv2.imwrite(os.path.join("BoundingRectangle/CroppedImages" , newImage), cropped_image)
 
     # resizing images
     #resizedImg = cv2.resize(cropped_image, (668, 649), interpolation = cv2.INTER_AREA)
-    #cv2.imwrite(os.path.join("test1", newImage), resizedImg)
+    #cv2.imwrite(os.path.join("BoundingRectangle/ResizedImages", newImage), resizedImg)
 
 
     #cv2.waitKey(0)
