@@ -1,6 +1,12 @@
 import cv2
 import numpy as np
 
+
+
+# !!!!!!!!!!!!!!!!!! NOT IN USE !!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!! STAND-BY   !!!!!!!!!!!!!!!!!!!!
+
+
 # Let's load a simple image with 3 black squares
 image = cv2.imread('img045-033.png')
 cv2.waitKey(0)
