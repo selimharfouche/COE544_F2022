@@ -1,4 +1,13 @@
-# Author: Gael Varoquaux <gael dot varoquaux at normalesup dot org>
+# Separate the data into training and test data sets
+
+X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.90)
+from sklearn.ensemble import RandomForestClassifier
+classifier = RandomForestClassifier(n_estimators=300, random_state=0)
+from sklearn.model_selection import cross_val_score
+all_accuracies = cross_val_score(estimator=classifier, X=X_train, y=Y_train, cv=5)
+print(all_accuracies)
+################# Author: Gael Varoquaux <gael dot varoquaux at normalesup dot org>
+#print (grid_search.best_params_)
 # License: BSD 3 clause
 
 # Standard scientific Python imports
@@ -47,3 +56,5 @@ for ax, image, prediction in zip(axes, X_test, predicted):
     ax.set_title(f"Prediction: {prediction}")
 
 plt.show()
+
+################
