@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
 # function that merges 2 rectangles
+# for the bouding rectangle ex: i, j
 def union(a, b):
  x = min(a[0], b[0])
  y = min(a[1], b[1])
@@ -20,11 +21,14 @@ def union(a, b):
 
 
 # aspect ratio (in decimal format)
+# to check why it does not give high accuracy
 def aspect_ratio(cropped_image):
+    # height and width
     ar = ((float)(cropped_image.shape[1] / cropped_image.shape[0]))
     return ar
 
 # aspect ration (in fraction format)
+# online
 def calculate_aspect(width: int, height: int) -> str:
     def gcd(a, b):
         return a if b == 0 else gcd(b, a % b)
@@ -138,8 +142,20 @@ def pixel_intensity(cropped_image):
     data = cropped_image.reshape((n_samples, -1))
     return data
 
+
+
+
+
+
+
 categories = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 data = []
+
+
+
+
+
+
 
 # read the input images
 for category in categories:

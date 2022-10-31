@@ -1,39 +1,49 @@
-import pandas as pd  #load training dataset
-import numpy as np
-import matplotlib.pyplot as pt
+# Author: Gael Varoquaux <gael dot varoquaux at normalesup dot org>
+# License: BSD 3 clause
+
+# Standard scientific Python imports
+import matplotlib.pyplot as plt
+
+# Import datasets, classifiers and performance metrics
+from sklearn import datasets, svm, metrics
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier #
 
 
-# DATA_SET_PATH
-TRAIN_INPUT = 'digit-recognizer/train.csv'
-TEST_INPUT = 'digit-recognizer/test.csv'
+# digits dataset consists of 8x8 pixel images of digits.
+digits = datasets.load_digits()
 
 
-data = pd.read_csv(TRAIN_INPUT).to_numpy()
+#images attribute of the dataset stores 8x8 arrays of grayscale values for each image
+#The target attribute of the dataset stores the digit each image represents and this is included in the title of the 4 plots below.
+_, axes = plt.subplots(nrows=1, ncols=4, figsize=(10, 3))
+for ax, image, label in zip(axes, digits.images, digits.target):
+    ax.set_axis_off()
+    ax.imshow(image, cmap=plt.cm.gray_r, interpolation="nearest")
+    ax.set_title("Training: %i" % label)
+plt.show()
 
-X, Y = data[:,1:] , data[:,0]
-X.shape, Y.shape
+# flatten the images
+n_samples = len(digits.images)
+data = digits.images.reshape((n_samples, -1))
 
-X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+# Create a classifier: a support vector classifier
+clf = svm.SVC(gamma=0.001)
 
-X_train, X_test, y_train, y_test
-model = DecisionTreeClassifier()
-model
-model.fit(X_train, y_train)
-from sklearn.metrics import accuracy_score
-#Predict the response for test dataset
-y_hat = model.predict(X_test)
-print(accuracy_score(y_test, y_hat))
-# Prepare Submission Data
-submission_data = pd.read_csv(TEST_INPUT).to_numpy()
+# Split data into 50% train and 50% test subsets
+X_train, X_test, y_train, y_test = train_test_split(
+    data, digits.target, test_size=0.5, shuffle=False
+)
 
-predictions = model.predict(submission_data)
+# Learn the digits on the train subset
+clf.fit(X_train, y_train)
 
-output = 'ImageId,Label\n'
+# Predict the value of the digit on the test subset
+predicted = clf.predict(X_test)
+_, axes = plt.subplots(nrows=1, ncols=4, figsize=(10, 3))
+for ax, image, prediction in zip(axes, X_test, predicted):
+    ax.set_axis_off()
+    image = image.reshape(8, 8)
+    ax.imshow(image, cmap=plt.cm.gray_r, interpolation="nearest")
+    ax.set_title(f"Prediction: {prediction}")
 
-for idx, pred in enumerate(predictions):
-    output += f'{idx+1},{pred}\n'
-with open('output.csv','w+') as file:
-    file.write(output)
-
+plt.show()
