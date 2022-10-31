@@ -8,7 +8,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import pickle
 from sklearn.model_selection import train_test_split
-
+from sklearn.neighbors import KNeighborsClassifier
 
 
 DIRECTORY_TRAINING_DATA = 'Images/'
