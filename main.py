@@ -9,9 +9,10 @@ import matplotlib.pyplot as plt
 import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-from pathlib import Path
+
 
 DIRECTORY_TRAINING_DATA = 'Images/'
+
 #When iterating through the training data looking for images
 Windows_Iteration ='\\*.png'
 Mac_Iteration='//*.png'
@@ -24,9 +25,11 @@ def union(a, b):
  h = max(a[1] + a[3], b[1] + b[3]) - y
  return (x, y, w, h)
 
-
+######################################################################
+# Feature #1: Aspect Ratio
 # aspect ratio (in decimal format)
 def aspect_ratio(cropped_image):
+    # number of columns / number of rows
     ar = ((float)(cropped_image.shape[1] / cropped_image.shape[0]))
     return ar
 
@@ -43,8 +46,8 @@ def calculate_aspect(width: int, height: int) -> str:
     print()
     return
 
-
-
+######################################################################
+# Feature 2: percent of pixels
 def top_half_img(cropped_image):
     top_half = cropped_image[int(0):int(cropped_image.shape[0] / 2), int(0):int(cropped_image.shape[1])]
 
@@ -121,7 +124,8 @@ def left_half_img(cropped_image):
 
     return percent_black
 
-
+######################################################################
+# Feature 3: projection histogram
 def histogram(cropped_image):
     cropped_image[cropped_image == 0] = 1
     cropped_image[cropped_image == 255] = 0
@@ -149,6 +153,10 @@ def pixel_intensity(cropped_image):
     cropped_image_reshaped = cropped_image.reshape((n_samples, -1))
     return cropped_image_reshaped
 
+
+
+# Categories labeling
+# Each directory name represents the label of the data we are working on 
 categories = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 data = []
 counter = 0
