@@ -9,8 +9,12 @@ import matplotlib.pyplot as plt
 import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from pathlib import Path
 
 DIRECTORY_TRAINING_DATA = 'Images/'
+#When iterating through the training data looking for images
+Windows_Iteration ='\\*.png'
+Mac_Iteration='//*.png'
 
 # function that merges 2 rectangles
 def union(a, b):
@@ -154,9 +158,11 @@ for category in categories:
  path = os.path.join(DIRECTORY_TRAINING_DATA, category)
  label = categories.index(category)
 
- for img in glob.glob(path + "\\*.png"):
+ for img in glob.glob(path + Mac_Iteration):
   if (img is not None):
     img0 = cv2.imread(img)
+
+
 
     # convert the image to grayscale
     img1 = cv2.cvtColor(img0, cv2.COLOR_BGR2GRAY)
