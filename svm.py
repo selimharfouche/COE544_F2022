@@ -16,8 +16,8 @@ from sklearn.svm import SVC
 import matplotlib.pyplot as plt
 
 # Import datasets, classifiers and performance metrics
-from sklearn import datasets, svm, metrics
-from sklearn.model_selection import train_test_split
+from sklearn import svm, metrics
+
 from data_preparation import X_train, X_test, Y_train, Y_test
 
 clf = svm.SVC(gamma=0.001)
@@ -28,20 +28,6 @@ clf.fit(X_train, Y_train)
 # Predict the value of the digit on the test subset
 predicted = clf.predict(X_test)
 
-###############################################################################
-# Below we visualize the first 4 test samples and show their predicted
-# digit value in the title.
-
-_, axes = plt.subplots(nrows=1, ncols=4, figsize=(10, 3))
-for ax, image, prediction in zip(axes, X_test, predicted):
-    ax.set_axis_off()
-    image = image.reshape(8, 8)
-    ax.imshow(image, cmap=plt.cm.gray_r, interpolation="nearest")
-    ax.set_title(f"Prediction: {prediction}")
-
-###############################################################################
-# :func:`~sklearn.metrics.classification_report` builds a text report showing
-# the main classification metrics.
 
 print(
     f"Classification report for classifier {clf}:\n"
@@ -62,9 +48,13 @@ plt.show()
 from sklearn.model_selection import GridSearchCV
   
 # defining parameter range
-param_grid = {'C': [0.1, 1, 10, 100, 1000], 
-              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+param_grid = {'C': [0.1, 1], 
+              'gamma': [1, 0.1],
               'kernel': ['rbf']} 
+
+#param_grid = {'C': [0.1, 1, 10, 100, 1000], 
+#              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+#              'kernel': ['rbf']} 
   
 grid = GridSearchCV(SVC(), param_grid, refit = True, verbose = 3)
   
