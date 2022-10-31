@@ -10,6 +10,8 @@ import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
+DIRECTORY_TRAINING_DATA = 'Images/'
+
 # function that merges 2 rectangles
 def union(a, b):
  x = min(a[0], b[0])
@@ -149,8 +151,7 @@ counter = 0
 
 # read the input images
 for category in categories:
- path = os.path.join("Images", category)
-
+ path = os.path.join(DIRECTORY_TRAINING_DATA, category)
  label = categories.index(category)
 
  for img in glob.glob(path + "\\*.png"):
