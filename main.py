@@ -38,8 +38,9 @@ def calculate_aspect(width: int, height: int) -> str:
     return
 
 
+
 def top_half_img(cropped_image):
-    top_half = cropped_image[int(0):int(H / 2), int(0):int(W)]
+    top_half = cropped_image[int(0):int(cropped_image.shape[0] / 2), int(0):int(cropped_image.shape[1])]
 
     # get all non black Pixels
     cntNotBlack = cv2.countNonZero(top_half)
@@ -50,15 +51,16 @@ def top_half_img(cropped_image):
 
     # compute all black pixels
     cntBlack = cntPixels - cntNotBlack
-    percent_black = (cntBlack / cntPixels) * 100
+    percent_black = int((cntBlack / cntPixels) * 100)
 
-    cv2.imwrite(os.path.join("test1", newImage), top_half)
+    #print(cntBlack)
+    #cv2.imwrite(os.path.join("test1", newImage), top_half)
 
     return percent_black
 
 
 def lower_half_img(cropped_image):
-    lower_half = cropped_image[int(H / 2):int(H), int(0):int(W)]
+    lower_half = cropped_image[int(cropped_image.shape[0] / 2):int(cropped_image.shape[0]), int(0):int(cropped_image.shape[1])]
 
     # get all non black Pixels
     cntNotBlack = cv2.countNonZero(lower_half)
@@ -71,13 +73,13 @@ def lower_half_img(cropped_image):
     cntBlack = cntPixels - cntNotBlack
     percent_black = (cntBlack / cntPixels) * 100
 
-    cv2.imwrite(os.path.join("test2", newImage), lower_half)
+    #cv2.imwrite(os.path.join("test2", newImage), lower_half)
 
     return percent_black
 
 
 def right_half_img(cropped_image):
-    right_half = cropped_image[int(0):int(H), int(W / 2):int(W)]
+    right_half = cropped_image[int(0):int(cropped_image.shape[0]), int(cropped_image.shape[1] / 2):int(cropped_image.shape[1])]
 
     # get all non black Pixels
     cntNotBlack = cv2.countNonZero(right_half)
@@ -96,7 +98,7 @@ def right_half_img(cropped_image):
 
 
 def left_half_img(cropped_image):
-    left_half = cropped_image[int(0):int(H), int(0):int(W / 2)]
+    left_half = cropped_image[int(0):int(cropped_image.shape[0]), int(0):int(cropped_image.shape[1] / 2)]
 
     # get all non black Pixels
     cntNotBlack = cv2.countNonZero(left_half)
@@ -120,26 +122,30 @@ def histogram(cropped_image):
 
     # Calculate horizontal projection
     hor_proj = np.sum(cropped_image, axis=1)
-    print(hor_proj)
 
     height, width = cropped_image.shape
 
-    blankImage = np.zeros((height, width, 3), np.uint8)
+    blankImage = np.zeros((height, width), np.uint8)
 
     # Draw a line for each row
     for row in range(height):
         cv2.line(blankImage, (0, row), (int(hor_proj[row] * width / height), row), (255, 255, 255), 1)
 
     # Save result
-    cv2.imwrite('test5/result.png', blankImage)
+    blankImage = cv2.resize(blankImage, (128, 128), interpolation=cv2.INTER_AREA)
+    imgName = "img" + str(counter) + ".png"
+    cv2.imwrite(os.path.join("test5", imgName), blankImage)
+
+    return blankImage
 
 def pixel_intensity(cropped_image):
     n_samples = len(cropped_image)
-    data = cropped_image.reshape((n_samples, -1))
-    return data
+    cropped_image_reshaped = cropped_image.reshape((n_samples, -1))
+    return cropped_image_reshaped
 
 categories = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 data = []
+counter = 0
 
 # read the input images
 for category in categories:
@@ -194,14 +200,25 @@ for category in categories:
 
     # crop image following the rectangle
     cropped_image = img1[int(Y):int(Y + H), int(X):int(X + W)]
+
     # resize image
-    cropped_image = cv2.resize(cropped_image, (8, 8), interpolation=cv2.INTER_AREA)
+    cropped_image = cv2.resize(cropped_image, (8,8), interpolation=cv2.INTER_AREA)
+
     # substring for image name
     newImage = img[9:]
     #cv2.imwrite(os.path.join(("newImages//"+str(category)), newImage), cropped_image)
+    cv2.imwrite(os.path.join(("newImages//"), newImage), cropped_image)
+
+    #data.append(['{0:.3g}'.format(top_half_img(cropped_image)/lower_half_img(cropped_image)), '{0:.3g}'.format(right_half_img(cropped_image)/left_half_img(cropped_image)), label])
+
+    #hor_proj = histogram(cropped_image)
+    #hor_proj_reshaped = hor_proj.reshape((len(hor_proj),-1))
+    #data.append([hor_proj_reshaped, label])
+    #data.append([pixel_intensity(cropped_image), label])
 
     data.append([pixel_intensity(cropped_image), label])
-print(len(data))
+    counter = counter + 1
+    #print(len(data))
 
     # aspect_ratio()
     # calculate_aspect(W, H)
@@ -230,9 +247,11 @@ labels = []
 
 for feature1, label in data:
     features.append(feature1.flatten())
+    #features.append(feature2)
     labels.append(label)
 
 # Separate the data into training and test data sets
+
 X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.30)
 
 # from sklearn.preprocessing import StandardScaler
@@ -240,6 +259,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=
 # X_train_scaled = scaler.fit_transform(X_train)
 # # we must apply the scaling to the test set that we computed for the training set
 # X_test_scaled = scaler.transform(X_test)
+
 X_train_scaled = X_train
 X_test_scaled = X_test
 
