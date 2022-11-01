@@ -9,6 +9,7 @@ The first project is to realize an intelligent hand-written character recognizer
 - Aspect Ratio
 - Percent of pixel
 - Projection Histogram
+- Sobel Edge
 - Number of Strokes (Soon)
 - average distance from image center (Soon)
 
