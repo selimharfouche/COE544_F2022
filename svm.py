@@ -22,13 +22,17 @@ from data_preparation import X_train, X_test, Y_train, Y_test
 
 clf = svm.SVC(gamma=0.001)
 
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
 # Learn the digits on the train subset
 clf.fit(X_train, Y_train)
 
 # Predict the value of the digit on the test subset
 predicted = clf.predict(X_test)
 
-
+clf = svm.SVC(probability=True) 
 print(
     f"Classification report for classifier {clf}:\n"
     f"{metrics.classification_report(Y_test, predicted,zero_division=1)}\n"
@@ -56,7 +60,7 @@ param_grid = {'C': [0.1, 1],
 #              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
 #              'kernel': ['rbf']} 
   
-grid = GridSearchCV(SVC(), param_grid, refit = True, verbose = 3)
+grid = GridSearchCV(SVC(), param_grid, refit = True, cv = 3)
   
 # fitting the model for grid search
 grid.fit(X_train, Y_train)
