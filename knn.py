@@ -1,5 +1,6 @@
-from data_preparation import X_train, X_test, Y_train, Y_test
+from data_prep_2 import X_train, X_test, Y_train, Y_test
 from sklearn.neighbors import KNeighborsClassifier
+
 
 # from sklearn.preprocessing import StandardScaler
 # scaler = StandardScaler()
@@ -49,3 +50,4 @@ print(knn_tuned)
 
 from sklearn.metrics import accuracy_score
 print(accuracy_score(Y_test, knn_tuned.predict(X_test_scaled)))
+print (grid_search.best_params_)
