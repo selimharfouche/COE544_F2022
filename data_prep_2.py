@@ -81,7 +81,7 @@ for category in categories:
 
     # resize image
     cropped_image = cv2.resize(cropped_image, (8,8), interpolation=cv2.INTER_AREA)
-    data.append([canny_edge(cropped_image), label])
+    data.append([LocalBinaryPatterns(24,8,cropped_image), label])
     counter = counter + 1
    
 

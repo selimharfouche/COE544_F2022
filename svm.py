@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-from data_preparation import X_train, X_test, Y_train, Y_test
+from data_prep_2 import X_train, X_test, Y_train, Y_test
 
 clf = svm.SVC(gamma=0.001)
 
@@ -33,23 +33,23 @@ print(
 
 disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
 disp.figure_.suptitle("Confusion Matrix")
-print(f"Confusion matrix:\n{disp.confusion_matrix}")
+#print(f"Confusion matrix:\n{disp.confusion_matrix}")
 
-plt.show()
+#plt.show()
 
 
 from sklearn.model_selection import GridSearchCV
   
 # defining parameter range
-param_grid = {'C': [0.1, 1], 
-              'gamma': [1, 0.1],
-              'kernel': ['rbf']} 
+# param_grid = {'C': [0.1, 1], 
+#               'gamma': [1, 0.1],
+#               'kernel': ['rbf']} 
 
-#param_grid = {'C': [0.1, 1, 10, 100, 1000], 
-#              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
-#              'kernel': ['rbf']} 
+param_grid = {'C': [0.1, 1, 10, 100, 1000], 
+              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+              'kernel': ['rbf']} 
   
-grid = GridSearchCV(SVC(), param_grid, refit = True, cv = 3)
+grid = GridSearchCV(SVC(), param_grid, refit = True, cv = 10,return_train_score=True, verbose = 10)
   
 # fitting the model for grid search
 grid.fit(X_train, Y_train)
