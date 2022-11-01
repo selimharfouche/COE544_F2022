@@ -25,6 +25,8 @@ categories = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 data = []
 counter = 0
 
+######################################################################
+#Append images to data
 # read the input images
 for category in categories:
  path = os.path.join(DIRECTORY_TRAINING_DATA, category)
@@ -79,34 +81,10 @@ for category in categories:
 
     # resize image
     cropped_image = cv2.resize(cropped_image, (8,8), interpolation=cv2.INTER_AREA)
-
-    # substring for image name
-    newImage = img[9:]
-    #cv2.imwrite(os.path.join(("newImages//"+str(category)), newImage), cropped_image)
-    cv2.imwrite(os.path.join(("newImages//"), newImage), cropped_image)
-
-    #data.append(['{0:.3g}'.format(top_half_img(cropped_image)/lower_half_img(cropped_image)), '{0:.3g}'.format(right_half_img(cropped_image)/left_half_img(cropped_image)), label])
-
-    #hor_proj = histogram(cropped_image)
-    #hor_proj_reshaped = hor_proj.reshape((len(hor_proj),-1))
-    #data.append([hor_proj_reshaped, label])
-    #data.append([pixel_intensity(cropped_image), label])
-
     data.append([pixel_intensity(cropped_image), label])
     counter = counter + 1
-    #print(len(data))
+   
 
-    # aspect_ratio()
-    # calculate_aspect(W, H)
-    #top_half_img(cropped_image)
-    #lower_half_img(cropped_image)
-    #right_half_img(cropped_image)
-    #left_half_img(cropped_image)
-    #histogram(cropped_image)
-    #print()
-    #cv2.waitKey(0)
-
-#print(data)
 
 #write data into pickle file
 pick_in = open('data.pickle','wb')
@@ -117,7 +95,7 @@ pick_in = open('data.pickle', 'rb')
 data = pickle.load(pick_in)
 pick_in.close()
 
-random.shuffle(data)
+#random.shuffle(data)
 features = []
 labels = []
 
@@ -128,4 +106,4 @@ for feature1, label in data:
 
 # Separate the data into training and test data sets
 
-X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.10)
+X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.40)
