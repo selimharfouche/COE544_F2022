@@ -1,3 +1,5 @@
+######################################################################
+# imports
 import random
 import cv2
 import numpy as np
@@ -6,15 +8,18 @@ import glob
 import pickle
 from sklearn.model_selection import train_test_split
 
-
-
+######################################################################
+# Constants
 DIRECTORY_TRAINING_DATA = 'Images/'
 
 #When iterating through the training data looking for images
 Windows_Iteration ='\\*.png'
 Mac_Iteration='//*.png'
 
+######################################################################
+# Helpers
 # function that merges 2 rectangles
+# takes as input two bounding rectangles and returns them merged
 def union(a, b):
  x = min(a[0], b[0])
  y = min(a[1], b[1])
@@ -24,13 +29,17 @@ def union(a, b):
 
 ######################################################################
 # Feature #1: Aspect Ratio
+
+# images are stored in 2D arrays
+# image.shape is (n,m). So image.shape[0] is n.
+
 # aspect ratio (in decimal format)
 def aspect_ratio(cropped_image):
     # number of columns / number of rows
     ar = ((float)(cropped_image.shape[1] / cropped_image.shape[0]))
     return ar
 
-# aspect ration (in fraction format)
+# aspect ratio (in fraction format)
 def calculate_aspect(width: int, height: int) -> str:
     def gcd(a, b):
         return a if b == 0 else gcd(b, a % b)
@@ -45,6 +54,9 @@ def calculate_aspect(width: int, height: int) -> str:
 
 ######################################################################
 # Feature 2: percent of pixels
+
+# takes as input the cropped image (half of it)
+# returns the percentage of black pixels in it
 def top_half_img(cropped_image):
     top_half = cropped_image[int(0):int(cropped_image.shape[0] / 2), int(0):int(cropped_image.shape[1])]
 
