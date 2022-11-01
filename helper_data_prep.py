@@ -2,6 +2,7 @@
 # function that merges 2 rectangles
 # takes as input two bounding rectangles and returns them merged
 import cv2
+import numpy as np
 def union(a, b):
  x = min(a[0], b[0])
  y = min(a[1], b[1])
@@ -136,9 +137,8 @@ def histogram(cropped_image):
 
     # Save result
     blankImage = cv2.resize(blankImage, (128, 128), interpolation=cv2.INTER_AREA)
-    imgName = "img" + str(counter) + ".png"
-    cv2.imwrite(os.path.join("test5", imgName), blankImage)
-
+    
+    
     return blankImage
 
 ###########################################################################
@@ -152,3 +152,10 @@ def pixel_intensity(cropped_image):
 ###########################################################################
 ###########################################################################
 ###########################################################################
+
+def edge_detection(cropped_image):
+    # Sobel Edge Detection
+    sobelx = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5) # Sobel Edge Detection on the X axis
+    sobely = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5) # Sobel Edge Detection on the Y axis
+    sobelxy = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=1, dy=1, ksize=5) # Combined X and Y Sobel Edge Detection
+    return sobelxy
