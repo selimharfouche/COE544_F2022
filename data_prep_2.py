@@ -95,7 +95,7 @@ pick_in = open('data.pickle', 'rb')
 data = pickle.load(pick_in)
 pick_in.close()
 
-#random.shuffle(data)
+random.shuffle(data)
 features = []
 labels = []
 
@@ -106,4 +106,4 @@ for feature1, label in data:
 
 # Separate the data into training and test data sets
 
-X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.40)
+X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.80)
