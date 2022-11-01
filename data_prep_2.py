@@ -8,9 +8,6 @@ import glob
 import pickle
 from sklearn.model_selection import train_test_split
 
-from helper_data_prep import black_and_white
-from PIL import Image
-
 ######################################################################
 # Constants
 DIRECTORY_TRAINING_DATA = 'Images/'
@@ -180,14 +177,14 @@ for category in categories:
 
  for img in glob.glob(path + Mac_Iteration):
   if (img is not None):
-    img0 = Image.open(img)
+    img0 = cv2.imread(img)
 
 
 
     # convert the image to grayscale
-    img1 = black_and_white(img0)
+    img1 = cv2.cvtColor(img0, cv2.COLOR_BGR2GRAY)
 
-  
+    ret, thresh = cv2.threshold(img1, 0, 255, cv2.THRESH_BINARY_INV)
     contours,_ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 
@@ -226,7 +223,7 @@ for category in categories:
      X, Y, W, H = cv2.boundingRect(cnt0)
 
     # crop image following the rectangle
-    cropped_image = img1[int(Y):int(Y + H), int(X):int(X + W)]
+    cropped_image = thresh[int(Y):int(Y + H), int(X):int(X + W)]
 
     # resize image
     cropped_image = cv2.resize(cropped_image, (8,8), interpolation=cv2.INTER_AREA)
