@@ -223,7 +223,7 @@ for category in categories:
      X, Y, W, H = cv2.boundingRect(cnt0)
 
     # crop image following the rectangle
-    cropped_image = img1[int(Y):int(Y + H), int(X):int(X + W)]
+    cropped_image = thresh[int(Y):int(Y + H), int(X):int(X + W)]
 
     # resize image
     cropped_image = cv2.resize(cropped_image, (8,8), interpolation=cv2.INTER_AREA)
