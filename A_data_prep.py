@@ -9,6 +9,7 @@ import pickle
 from sklearn.model_selection import *
 from A_helper_data_prep import *
 import matplotlib.pyplot as plt
+import pandas as pd
 
 ######################################################################
 # Constants
@@ -133,7 +134,12 @@ for category in categories:
     # ax5.imshow(cropped_image)
     # plt.show()
     #data.append([LocalBinaryPatterns(24,8,cropped_image), label])
-    data.append([pixel_intensity(cropped_image),label])
+    feature1=pixel_intensity(cropped_image).flatten()
+    feature2=histogram(cropped_image).flatten()
+    features_appended = np.append(feature1,feature2)
+   # df = pd.DataFrame(np.vstack([feature1, feature2]).T, columns=['feature1', 'feature2'])
+    
+    data.append([features_appended,label])
     counter = counter + 1
    
 
@@ -151,8 +157,8 @@ random.shuffle(data)
 features = []
 labels = []
 
-for feature1, label in data:
-    features.append(feature1.flatten())
+for features1, label in data:
+    features.append(features1)
     #features.append(feature2)
     labels.append(label)
     
@@ -160,4 +166,4 @@ for feature1, label in data:
 
 # Separate the data into training and test data sets
 
-X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.3)
+X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.8)
