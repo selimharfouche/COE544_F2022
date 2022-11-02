@@ -7,6 +7,7 @@ from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
+
 from data_prep_2 import X_train, X_test, Y_train, Y_test
 
 clf = svm.SVC(gamma=0.001)
@@ -41,13 +42,13 @@ disp.figure_.suptitle("Confusion Matrix")
 from sklearn.model_selection import GridSearchCV
   
 # defining parameter range
-# param_grid = {'C': [0.1, 1], 
-#               'gamma': [1, 0.1],
-#               'kernel': ['rbf']} 
-
-param_grid = {'C': [0.1, 1, 10, 100, 1000], 
-              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+param_grid = {'C': [0.1, 1], 
+              'gamma': [1, 0.1],
               'kernel': ['rbf']} 
+
+# param_grid = {'C': [0.1, 1, 10, 100, 1000], 
+#               'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+#               'kernel': ['rbf']} 
   
 grid = GridSearchCV(SVC(), param_grid, refit = True, cv = 10,return_train_score=True, verbose = 10)
   
@@ -57,6 +58,7 @@ grid.fit(X_train, Y_train)
 print(grid.best_params_)
   
 # print how our model looks after hyper-parameter tuning
+svm_best=grid.best_estimator_
 print(grid.best_estimator_)
 grid_predictions = grid.predict(X_test)
   

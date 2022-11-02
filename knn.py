@@ -45,9 +45,9 @@ grid_search = GridSearchCV(knn_grid_tuned, parameters, cv=2, scoring='accuracy',
 # fit the grid search with training set
 grid_search.fit(X_train_scaled, Y_train)
 # retrieve the best estimator
-knn_tuned = grid_search.best_estimator_
-print(knn_tuned)
+knn_best = grid_search.best_estimator_
+print(knn_best)
 
 from sklearn.metrics import accuracy_score
-print(accuracy_score(Y_test, knn_tuned.predict(X_test_scaled)))
+print(accuracy_score(Y_test, knn_best.predict(X_test_scaled)))
 print (grid_search.best_params_)
