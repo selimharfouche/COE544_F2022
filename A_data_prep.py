@@ -8,6 +8,7 @@ import glob
 import pickle
 from sklearn.model_selection import *
 from A_helper_data_prep import *
+import matplotlib.pyplot as plt
 
 ######################################################################
 # Constants
@@ -35,9 +36,35 @@ for category in categories:
  for img in glob.glob(path + Mac_Iteration):
   if (img is not None):
     img0 = cv2.imread(img)
+
+
+
+    ###### Skew correction
+
+    # from A_skew_correction import correct_skew
+    # img0 = correct_skew(img0)
+
+
+
+
+    ####### Plotting debug
+    # fig = plt.figure()
+    # ax1 = fig.add_subplot(3,3,1)
+    # ax1.set_title("original image")
+    # ax1.imshow(img0)
+    
+   
     # convert the image to BW
     thresh = convert_BW(img0)
 
+
+
+    ####### Plotting debug
+    # ax2 = fig.add_subplot(3,3,2)
+    # ax2.set_title("BW")
+    # ax2.imshow(thresh)
+    
+   
     # Finding contours
     contours,_ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -79,9 +106,34 @@ for category in categories:
     # crop image following the rectangle
     cropped_image = thresh[int(Y):int(Y + H), int(X):int(X + W)]
 
+
+
+
+    ####### Plotting debug
+    # ax3 = fig.add_subplot(3,3,3)
+    # ax3.set_title("Bounded image")
+    # ax3.imshow(cropped_image)
+    
+    
+
     # resize image
-    cropped_image = cv2.resize(cropped_image, (8,8), interpolation=cv2.INTER_AREA)
-    data.append([LocalBinaryPatterns(24,8,cropped_image), label])
+    cropped_image = cv2.resize(cropped_image, (10,10), interpolation=cv2.INTER_AREA)
+
+
+
+
+    ####### Plotting debug
+    # ax4 = fig.add_subplot(3,3,4)
+    # ax4.set_title("cropeed image")
+    # ax4.imshow(cropped_image)
+
+    ####### Plotting debug
+    # ax5 = fig.add_subplot(3,3,5)
+    # ax5.set_title("Skew correction")
+    # ax5.imshow(cropped_image)
+    # plt.show()
+    #data.append([LocalBinaryPatterns(24,8,cropped_image), label])
+    data.append([pixel_intensity(cropped_image),label])
     counter = counter + 1
    
 
@@ -103,7 +155,9 @@ for feature1, label in data:
     features.append(feature1.flatten())
     #features.append(feature2)
     labels.append(label)
+    
+
 
 # Separate the data into training and test data sets
 
-X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.80)
+X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.3)

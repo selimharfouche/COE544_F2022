@@ -155,8 +155,8 @@ def pixel_intensity(cropped_image):
 
 def sobel_edge(cropped_image):
     # Sobel Edge Detection
-    sobelx = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5) # Sobel Edge Detection on the X axis
-    sobely = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5) # Sobel Edge Detection on the Y axis
+    # sobelx = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5) # Sobel Edge Detection on the X axis
+    # sobely = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5) # Sobel Edge Detection on the Y axis
     sobelxy = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=1, dy=1, ksize=5) # Combined X and Y Sobel Edge Detection
     return sobelxy
 
