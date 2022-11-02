@@ -1,4 +1,4 @@
-from data_prep_2 import X_train, X_test, Y_train, Y_test
+from A_data_prep import X_train, X_test, Y_train, Y_test
 from sklearn.neighbors import KNeighborsClassifier
 
 

@@ -1,7 +1,7 @@
-from svm import svm_best
-from RF import rf_best
-from knn import knn_best
-from data_prep_2 import X_test, X_train, Y_test, Y_train
+from A_learner_svm import svm_best
+from A_learner_rf import rf_best
+from A_learner_knn import knn_best
+from A_data_prep import X_test, X_train, Y_test, Y_train
 from sklearn.ensemble import VotingClassifier#create a dictionary of our models
 from sklearn.metrics import accuracy_score
 estimators=[("knn", knn_best), ("rf", rf_best), ("svm", svm_best)]#create our voting classifier, inputting our models
