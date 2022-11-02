@@ -14,6 +14,7 @@ The first project is to realize an intelligent hand-written character recognizer
 - average distance from image center (Soon)
 
 
+
 ## Non-parametric learners used
 - KNN
 - SVM 
