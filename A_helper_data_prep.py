@@ -1,6 +1,8 @@
+###########################################################################
+###########################################################################
+###########################################################################
 # Helpers
-# function that merges 2 rectangles
-# takes as input two bounding rectangles and returns them merged
+# Helper #1: takes as input two bounding rectangles and returns them merged
 import cv2
 import numpy as np
 def union(a, b):
@@ -10,7 +12,7 @@ def union(a, b):
  h = max(a[1] + a[3], b[1] + b[3]) - y
  return (x, y, w, h)
 
-
+# Helper #2: converts image to black and white
 def convert_BW(image):
     img1 = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -18,21 +20,32 @@ def convert_BW(image):
     return thresh
 ###########################################################################
 ###########################################################################
-# Feature #1: Aspect Ratio
+###########################################################################
 
+
+###########################################################################
+###########################################################################
+###########################################################################
+# Features
+# Feature #1: Aspect Ratio
+# Reminders:
 # images are stored in 2D arrays
 # image.shape is (n,m). So image.shape[0] is n.
 
-# aspect ratio (in decimal format)
+###########################################################################
+# Feature #1.a : aspect ratio in decimal format
 def aspect_ratio(cropped_image):
     # number of columns / number of rows
     ar = ((float)(cropped_image.shape[1] / cropped_image.shape[0]))
     return ar
+###########################################################################
 
-# aspect ratio (in fraction format)
+###########################################################################
+# Feature #1.b : aspect ratio in decimal format
 def calculate_aspect(width: int, height: int) -> str:
     def gcd(a, b):
         return a if b == 0 else gcd(b, a % b)
+
 
     r = gcd(width, height)
     x = int(width / r)
@@ -42,13 +55,18 @@ def calculate_aspect(width: int, height: int) -> str:
     print()
     return
 ###########################################################################
+
+###########################################################################
 ###########################################################################
 
+###########################################################################
+###########################################################################
 # Feature 2: Pixel Count, Pixel Percent
 # takes as input the cropped image
 # returns the percentage of black pixels in it
 
 ###########################################################################
+# Feature 2.a: Black pixel percent of top_half_img
 def top_half_img(cropped_image):
     top_half = cropped_image[int(0):int(cropped_image.shape[0] / 2), int(0):int(cropped_image.shape[1])]
 
@@ -64,8 +82,10 @@ def top_half_img(cropped_image):
     percent_black = int((cntBlack / cntPixels) * 100)
 
     return percent_black
+###########################################################################
 
 ###########################################################################
+# Feature 2.b: Black pixel percent of lower_half_img
 def lower_half_img(cropped_image):
     lower_half = cropped_image[int(cropped_image.shape[0] / 2):int(cropped_image.shape[0]), int(0):int(cropped_image.shape[1])]
 
@@ -83,6 +103,7 @@ def lower_half_img(cropped_image):
     return percent_black
 
 ###########################################################################
+# Feature 2.c: Black pixel percent of right_half_img
 def right_half_img(cropped_image):
     right_half = cropped_image[int(0):int(cropped_image.shape[0]), int(cropped_image.shape[1] / 2):int(cropped_image.shape[1])]
 
@@ -100,6 +121,7 @@ def right_half_img(cropped_image):
     return percent_black
 
 ###########################################################################
+# Feature 2.d: Black pixel percent of left_half_img
 def left_half_img(cropped_image):
     left_half = cropped_image[int(0):int(cropped_image.shape[0]), int(0):int(cropped_image.shape[1] / 2)]
 
@@ -115,11 +137,10 @@ def left_half_img(cropped_image):
     percent_black = (cntBlack / cntPixels) * 100
 
     return percent_black
-
-
 ###########################################################################
 ###########################################################################
-# Feature 3: projection histogram
+# Feature 3: Projection histogram
+
 def histogram(cropped_image):
     cropped_image[cropped_image == 0] = 1
     cropped_image[cropped_image == 255] = 0
@@ -140,18 +161,22 @@ def histogram(cropped_image):
     
     
     return blankImage
+###########################################################################
+###########################################################################
 
 ###########################################################################
-# Feature 5
-# Pixel intensity
+###########################################################################
+# Feature 4: Pixel intensity
 def pixel_intensity(cropped_image):
     n_samples = len(cropped_image)
     cropped_image_reshaped = cropped_image.reshape((n_samples, -1))
     return cropped_image_reshaped
 ###########################################################################
 ###########################################################################
+
 ###########################################################################
 ###########################################################################
+# Feature 5: Sobel edge
 
 def sobel_edge(cropped_image):
     # Sobel Edge Detection
@@ -159,14 +184,24 @@ def sobel_edge(cropped_image):
     # sobely = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5) # Sobel Edge Detection on the Y axis
     sobelxy = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=1, dy=1, ksize=5) # Combined X and Y Sobel Edge Detection
     return sobelxy
+###########################################################################
+###########################################################################
 
+###########################################################################
+###########################################################################
+# Feature 6: Canny Edge
 def canny_edge(cropped_image):
     edges = cv2.Canny(image=cropped_image, threshold1=100, threshold2=200) # Canny Edge Detection
     return edges
 
 from skimage import feature
 
+###########################################################################
+###########################################################################
 
+###########################################################################
+###########################################################################
+#Feature 7: Local Binary Patterns
 def LocalBinaryPatterns(numPoints, radius, image, eps=1e-7):
 	
 	lbp = feature.local_binary_pattern(image, numPoints, radius, method="uniform")
@@ -177,3 +212,10 @@ def LocalBinaryPatterns(numPoints, radius, image, eps=1e-7):
     
 	# return the histogram of Local Binary Patterns
 	return hist
+###########################################################################
+###########################################################################
+
+
+###########################################################################
+###########################################################################
+###########################################################################
