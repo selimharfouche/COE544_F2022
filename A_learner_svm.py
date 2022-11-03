@@ -183,4 +183,4 @@ class SVM_class:
     #     plt.show()
     
     # # print classification report
-    print(classification_report(Y_test, grid_predictions))
+    # print(classification_report(Y_test, grid_predictions))

@@ -134,12 +134,20 @@ for category in categories:
     # ax5.imshow(cropped_image)
     # plt.show()
     #data.append([LocalBinaryPatterns(24,8,cropped_image), label])
+
+
     feature1=pixel_intensity(cropped_image).flatten()
-    feature2=histogram(cropped_image).flatten()
-    features_appended = np.append(feature1,feature2)
+
+
+
+    # feature2=histogram(cropped_image).flatten()
+    # features_appended = np.append(feature1,feature2)
+
+
+
    # df = pd.DataFrame(np.vstack([feature1, feature2]).T, columns=['feature1', 'feature2'])
     
-    data.append([features_appended,label])
+    data.append([feature1,label])
     counter = counter + 1
    
 
