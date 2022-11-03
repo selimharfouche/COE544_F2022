@@ -1,17 +1,19 @@
+
 ######################################################################
-# imports
-import random
-import cv2
+######################## IMPORTS & Variables #########################
+######################################################################
+
+import cv2, glob, os, pickle, random
+
 import numpy as np
-import os
-import glob
-import pickle
-from sklearn.model_selection import *
-from A_helper_data_prep import *
 import matplotlib.pyplot as plt
 import pandas as pd
 
-######################################################################
+from sklearn.model_selection import *
+from A_helper_data_prep import *
+
+
+
 # Constants
 DIRECTORY_TRAINING_DATA = 'Images/'
 
@@ -19,56 +21,80 @@ DIRECTORY_TRAINING_DATA = 'Images/'
 Windows_Iteration ='\\*.png'
 Mac_Iteration='//*.png'
 
-######################################################################
+# Test size 
+TEST_SIZE = 0.8
+
 
 # Categories labeling
 # Each directory name represents the label of the data we are working on 
 categories = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 data = []
 counter = 0
+######################################################################
+
 
 ######################################################################
-#Append images to data
-# read the input images
+########################### IMAGE READING ############################
+######################################################################
+
+
+# Read the input images
 for category in categories:
  path = os.path.join(DIRECTORY_TRAINING_DATA, category)
  label = categories.index(category)
 
  for img in glob.glob(path + Mac_Iteration):
   if (img is not None):
-    img0 = cv2.imread(img)
+    img0 = cv2.imread(img) # Image read
+
+######################################################################
 
 
-
-    ###### Skew correction
+######################################################################
+########################## SKEW CORRECTION ###########################
+######################################################################
+    # # Skew correction
 
     # from A_skew_correction import correct_skew
     # img0 = correct_skew(img0)
+######################################################################
+   
 
-
-
-
-    ####### Plotting debug
+######################################################################
+############################ PLOTTING-1 ##############################
+######################################################################
+    ####### Plotting debug: Original Image
     # fig = plt.figure()
     # ax1 = fig.add_subplot(3,3,1)
     # ax1.set_title("original image")
     # ax1.imshow(img0)
+######################################################################
     
+
    
+######################################################################
+############################### B&W ##################################
+######################################################################
     # convert the image to BW
     thresh = convert_BW(img0)
 
+######################################################################
 
 
-    ####### Plotting debug
+######################################################################
+############################ PLOTTING-2 ##############################
+######################################################################
+    ####### Plotting debug : Black and White Image
     # ax2 = fig.add_subplot(3,3,2)
     # ax2.set_title("BW")
     # ax2.imshow(thresh)
-    
-   
+######################################################################
+
+######################################################################
+############### Minimum Bounding rectangle extraction ################
+######################################################################   
     # Finding contours
     contours,_ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
 
     if(len(contours)>1):
      # get first 2 contour points (base cases)
@@ -107,51 +133,72 @@ for category in categories:
     # crop image following the rectangle
     cropped_image = thresh[int(Y):int(Y + H), int(X):int(X + W)]
 
+######################################################################
 
-
-
-    ####### Plotting debug
+######################################################################
+############################ PLOTTING-3 ##############################
+######################################################################
+    ####### Plotting debug : Bounded Image
     # ax3 = fig.add_subplot(3,3,3)
     # ax3.set_title("Bounded image")
-    # ax3.imshow(cropped_image)
+######################################################################
     
-    
-
+######################################################################
+############################# RENDERING ##############################
+######################################################################
     # resize image
     cropped_image = cv2.resize(cropped_image, (10,10), interpolation=cv2.INTER_AREA)
 
 
 
+######################################################################
 
+######################################################################
+########################### PLOTTING-4&5 #############################
+######################################################################
     ####### Plotting debug
     # ax4 = fig.add_subplot(3,3,4)
     # ax4.set_title("cropeed image")
     # ax4.imshow(cropped_image)
-
-    ####### Plotting debug
     # ax5 = fig.add_subplot(3,3,5)
     # ax5.set_title("Skew correction")
     # ax5.imshow(cropped_image)
     # plt.show()
-    #data.append([LocalBinaryPatterns(24,8,cropped_image), label])
+######################################################################
 
 
+
+######################################################################
+######################## FEATURES EXTRACTION #########################
+######################################################################
+    
+    # Extracting first feature 
     feature1=pixel_intensity(cropped_image).flatten()
 
-
-
+    # # Combining multiple features
     # feature2=histogram(cropped_image).flatten()
     # features_appended = np.append(feature1,feature2)
+    
+    # feature3 LocalBinaryPatterns(24,8,cropped_image)
+    # To BE Completed
 
 
 
-   # df = pd.DataFrame(np.vstack([feature1, feature2]).T, columns=['feature1', 'feature2'])
+   
     
     data.append([feature1,label])
+
+    # # OR if multiples features
+    #  data.append([features_appended,label])
+
+    # update the counter
     counter = counter + 1
    
+######################################################################
 
-
+######################################################################
+######################## WHYYY?????????????? #########################
+######################################################################
 #write data into pickle file
 pick_in = open('data.pickle','wb')
 pickle.dump(data, pick_in)
@@ -160,18 +207,26 @@ pick_in.close()
 pick_in = open('data.pickle', 'rb')
 data = pickle.load(pick_in)
 pick_in.close()
+######################################################################
 
+# DATA SHUFFLING
 random.shuffle(data)
 features = []
 labels = []
 
-for features1, label in data:
-    features.append(features1)
-    #features.append(feature2)
-    labels.append(label)
+
     
 
+######################################################################
+########################## DATA SEPARATION ###########################
+######################################################################
+
+for features1, label in data:
+    features.append(features1)
+    labels.append(label)
 
 # Separate the data into training and test data sets
 
-X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.8)
+X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=TEST_SIZE)
+
+######################################################################
