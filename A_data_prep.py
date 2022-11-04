@@ -3,6 +3,9 @@
 ######################## IMPORTS & Variables #########################
 ######################################################################
 
+
+from pickle import dump
+
 import cv2, glob, os, pickle, random
 
 import numpy as np
@@ -228,5 +231,16 @@ for features1, label in data:
 # Separate the data into training and test data sets
 
 X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=TEST_SIZE)
+
+# save the model
+dump(X_train, open('data/X_train.pkl', 'wb'))
+dump(X_test, open('data/X_test.pkl', 'wb'))
+dump(Y_test, open('data/Y_test.pkl', 'wb'))
+dump(Y_train, open('data/Y_train.pkl', 'wb'))
+
+
+
+
+
 
 ######################################################################

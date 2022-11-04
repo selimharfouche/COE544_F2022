@@ -21,7 +21,16 @@ from sklearn.svm import SVC
 from A_data_prep import X_train, X_test, Y_train, Y_test
 from sklearn.model_selection import GridSearchCV
 
-from joblib import dump
+from joblib import load, dump
+
+X_train = load(open('data/X_train.pkl', 'rb'))
+X_test = load(open('data/X_test.pkl', 'rb'))
+Y_test = load(open('data/Y_test.pkl', 'rb'))
+Y_train = load(open('data/Y_train.pkl', 'rb'))
+
+
+
+
 
 ######################################################################
 
@@ -104,9 +113,13 @@ class SVM_class:
     # https://www.vebuso.com/2020/03/svm-hyperparameter-tuning-using-gridsearchcv/
 
     # defining parameter range
-    Cs = [0.1, 1, 10, 100, 1000]
-    Gammas = [1, 0.1, 0.01, 0.001, 0.0001]
-    Kernels = ['rbf', 'poly', 'sigmoid']
+    # Cs = [0.1, 1, 10, 100, 1000]
+    # Gammas = [1, 0.1, 0.01, 0.001, 0.0001]
+    # Kernels = ['rbf', 'poly', 'sigmoid']
+
+    Cs = [0.1]
+    Gammas = [1]
+    Kernels = ['rbf', 'poly']
 
     # parameter grid using the range defined just above
     param_grid = {'C': Cs, 
@@ -139,7 +152,7 @@ class SVM_class:
 ######################### SAVING PARAMETERS ##########################
 ######################################################################
     # save the best parameters of the gridsearch
-    dump(grid.best_estimator_, "best_estimators/svm_best.joblib")
+    dump(grid.best_estimator_, "best_estimators/svm_best1.joblib")
     print ("parameters saved in best_estimators/svm_best1.joblib ")
 ###############################################################################
 
