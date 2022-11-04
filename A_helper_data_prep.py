@@ -61,7 +61,8 @@ def calculate_aspect(width: int, height: int) -> str:
 
 ###########################################################################
 ###########################################################################
-# Feature 2: Pixel Count, Pixel Percent
+# Feature 2: Pixel Count, Pixel Percent 
+# 4 variables
 # takes as input the cropped image
 # returns the percentage of black pixels in it
 

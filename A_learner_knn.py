@@ -1,12 +1,20 @@
-from A_data_prep import X_train, X_test, Y_train, Y_test
+#from A_data_prep import X_train, X_test, Y_train, Y_test
 from sklearn.neighbors import KNeighborsClassifier
+from pickle import load
+from sklearn.preprocessing import StandardScaler, SplineTransformer
 
+
+
+X_train = load(open('data/X_train.pkl', 'rb'))
+X_test = load(open('data/X_test.pkl', 'rb'))
+Y_test = load(open('data/Y_test.pkl', 'rb'))
+Y_train = load(open('data/Y_train.pkl', 'rb'))
 
 # from sklearn.preprocessing import StandardScaler
-# scaler = StandardScaler()
-# X_train_scaled = scaler.fit_transform(X_train)
-# # we must apply the scaling to the test set that we computed for the training set
-# X_test_scaled = scaler.transform(X_test)
+scaler = SplineTransformer()
+X_train_scaled = scaler.fit_transform(X_train)
+#we must apply the scaling to the test set that we computed for the training set
+X_test_scaled = scaler.transform(X_test)
 
 X_train_scaled = X_train
 X_test_scaled = X_test

@@ -119,7 +119,7 @@ class SVM_class:
 
     Cs = [0.1]
     Gammas = [1]
-    Kernels = ['rbf', 'poly']
+    Kernels = ['poly']
 
     # parameter grid using the range defined just above
     param_grid = {'C': Cs, 

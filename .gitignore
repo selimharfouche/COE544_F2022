@@ -3,3 +3,6 @@ __pycache__/
 *.pickle
 **/*.pickle
 .DS_Store
+.idea/
+data/*.pkl
+models/*.sav
