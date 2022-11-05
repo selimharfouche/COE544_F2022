@@ -115,7 +115,7 @@ class SVM_class:
     # defining parameter range
     # Cs = [0.1, 1, 10, 100, 1000]
     # Gammas = [1, 0.1, 0.01, 0.001, 0.0001]
-    # Kernels = ['rbf', 'poly', 'sigmoid']
+    # Kernels = ['rbf', 'poly', 'sigmoid', 'linear']
 
     Cs = [0.1]
     Gammas = [1]
