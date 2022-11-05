@@ -43,6 +43,18 @@ from sklearn import metrics
 
 #Checking performance on the training set
 
+# Confusion matrix
+    # We can also plot a :ref:`confusion matrix <confusion_matrix>` of the
+    # true digit values and the predicted digit values.
+
+
+knn = KNeighborsClassifier()
+disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, knn.fit(X_train,Y_train).predict(X_test))
+disp.figure_.suptitle("Confusion Matrix")
+print(f"Confusion matrix:\n{disp.confusion_matrix}")
+
+plt.show()
+
 #Grid search best k-NN parameters
 parameters = {'n_neighbors':list(range(1, 20)) ,'weights': ['uniform', 'distance']}
 from sklearn.model_selection import GridSearchCV

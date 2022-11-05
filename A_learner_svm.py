@@ -18,9 +18,9 @@ from sklearn import svm, metrics
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler, SplineTransformer
 from sklearn.svm import SVC
-from A_data_prep import X_train, X_test, Y_train, Y_test
+#from A_data_prep import X_train, X_test, Y_train, Y_test
 from sklearn.model_selection import GridSearchCV
-
+import matplotlib.pyplot as plt
 from joblib import load, dump
 
 X_train = load(open('data/X_train.pkl', 'rb'))
@@ -96,11 +96,11 @@ class SVM_class:
     # We can also plot a :ref:`confusion matrix <confusion_matrix>` of the
     # true digit values and the predicted digit values.
 
-    # disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
-    # disp.figure_.suptitle("Confusion Matrix")
-    #print(f"Confusion matrix:\n{disp.confusion_matrix}")
+    disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
+    disp.figure_.suptitle("Confusion Matrix")
+    print(f"Confusion matrix:\n{disp.confusion_matrix}")
 
-    #plt.show()
+    plt.show()
 ###############################################################################
    
 
@@ -154,6 +154,9 @@ class SVM_class:
     # save the best parameters of the gridsearch
     dump(grid.best_estimator_, "best_estimators/svm_best1.joblib")
     print ("parameters saved in best_estimators/svm_best1.joblib ")
+    print(grid.best_estimator_)
+    print (grid.best_params_)
+    print (grid.best_score_)
 ###############################################################################
 
 
