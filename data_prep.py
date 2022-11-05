@@ -13,8 +13,8 @@ class data_prep:
         directory_training_data="datasets/A",
         numerical=False,
         alphabetical=False,
-        lowercase=False,
-        uppercase=False,
+        lower_case=False,
+        upper_case=False,
         all_features=False,
         feature1="",
         feature2="",
@@ -45,201 +45,24 @@ class data_prep:
 
         # selecting characters to train on
         if numerical:
-            self.categories = [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-            ]
-
+            from characters_categories import numerical_category
+            self.categories = numerical_category
+                
         elif alphabetical:
-            self.categories = [
-                "a",
-                "b",
-                "c",
-                "d",
-                "e",
-                "f",
-                "g",
-                "h",
-                "i",
-                "j",
-                "k",
-                "l",
-                "m",
-                "n",
-                "o",
-                "p",
-                "q",
-                "r",
-                "s",
-                "t",
-                "u",
-                "v",
-                "w",
-                "x",
-                "y",
-                "z",
-                "a'",
-                "b'",
-                "c'",
-                "d'",
-                "e'",
-                "f'",
-                "g'",
-                "h'",
-                "i'",
-                "j'",
-                "k'",
-                "l'",
-                "m'",
-                "n'",
-                "o'",
-                "p'",
-                "q'",
-                "r'",
-                "s'",
-                "t'",
-                "u'",
-                "v'",
-                "w'",
-                "x'",
-                "y'",
-                "z'",
-            ]
+            from characters_categories import alphabetical_category
+            self.categories = alphabetical_category
+        elif lower_case:
+            from characters_categories import lower_case_category
+            self.categories = lower_case_category
 
-        elif lowercase:
-            self.categories = [
-                "a",
-                "b",
-                "c",
-                "d",
-                "e",
-                "f",
-                "g",
-                "h",
-                "i",
-                "j",
-                "k",
-                "l",
-                "m",
-                "n",
-                "o",
-                "p",
-                "q",
-                "r",
-                "s",
-                "t",
-                "u",
-                "v",
-                "w",
-                "x",
-                "y",
-                "z",
-            ]
+        elif upper_case:
+            from characters_categories import upper_case_category
+            self.categories = upper_case_category
+           
+        else:  # by default, alphanumerical
+            from characters_categories import alphanumerical_category
+            self.categories = alphanumerical_category
 
-        elif uppercase:
-            self.categories = [
-                "a'",
-                "b'",
-                "c'",
-                "d'",
-                "e'",
-                "f'",
-                "g'",
-                "h'",
-                "i'",
-                "j'",
-                "k'",
-                "l'",
-                "m'",
-                "n'",
-                "o'",
-                "p'",
-                "q'",
-                "r'",
-                "s'",
-                "t'",
-                "u'",
-                "v'",
-                "w'",
-                "x'",
-                "y'",
-                "z'",
-            ]
-
-        else:  # by default alphanumerical
-
-            self.categories = [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "a",
-                "b",
-                "c",
-                "d",
-                "e",
-                "f",
-                "g",
-                "h",
-                "i",
-                "j",
-                "k",
-                "l",
-                "m",
-                "n",
-                "o",
-                "p",
-                "q",
-                "r",
-                "s",
-                "t",
-                "u",
-                "v",
-                "w",
-                "x",
-                "y",
-                "z",
-                "a'",
-                "b'",
-                "c'",
-                "d'",
-                "e'",
-                "f'",
-                "g'",
-                "h'",
-                "i'",
-                "j'",
-                "k'",
-                "l'",
-                "m'",
-                "n'",
-                "o'",
-                "p'",
-                "q'",
-                "r'",
-                "s'",
-                "t'",
-                "u'",
-                "v'",
-                "w'",
-                "x'",
-                "y'",
-                "z'",
-            ]
         if all_features:
             feature1 = "aspect_ratio"
             feature2 = "top_half_img"
@@ -318,7 +141,6 @@ class data_prep:
                 rect_temp = self.X, self.Y, self.W, self.H
         else:
             cnt0 = self.contours[0]
-            cnt1 = 0
             # compute rectangle (minimum area)
             self.X, self.Y, self.W, self.H = cv2.boundingRect(cnt0)
 
