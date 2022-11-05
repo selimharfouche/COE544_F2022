@@ -1,6 +1,3 @@
-
-
-
 from pickle import dump
 
 import cv2, glob, os, pickle, random
@@ -13,36 +10,34 @@ from A_helper_data_prep import *
 
 class data_prep():
 
-    def __init__(self):
+    def __init__(self, test_size=0.3,feature1="",feature2="",feature3="",feature4="",feature5="",feature6="",feature7="",):
         self.counter = 0
         self.data = []
         self.DIRECTORY_TRAINING_DATA = 'datasets/A'
         self.Windows_Iteration ='\\*.png'
         self.Mac_Iteration='//*.png'
-        self.TEST_SIZE = 0.3
+        self.TEST_SIZE = test_size
         self.categories = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
         'a\'','b\'','c\'','d\'','e\'','f\'','g\'','h\'','i\'','j\'','k\'','l\'','m\'','n\'','o\'','p\'','q\'','r\'','s\'','t\'','u\'','v\'','w\'','x\'','y\'','z\'']
-        
+        self.selected_features=[feature1,feature2,feature3,feature4,feature5,feature6,feature7]
 
 
     def read_image(self):
-        categories=self.categories
-        DIRECTORY_TRAINING_DATA = self.DIRECTORY_TRAINING_DATA 
-        DIRECTORY_TRAINING_DATA = self.DIRECTORY_TRAINING_DATA 
-        Mac_Iteration=self.Mac_Iteration
-        TEST_SIZE =self.TEST_SIZE
-        categories=self.categories
+        print("TEST_SIZE:"+str(self.TEST_SIZE))
+        
+       
         
         
-        for category in categories:
-            path = os.path.join(DIRECTORY_TRAINING_DATA, category)
-            self.label = categories.index(category)
-            for img in glob.glob(path + Mac_Iteration):
+        
+        
+        for category in self.categories:
+            path = os.path.join(self.DIRECTORY_TRAINING_DATA , category)
+            self.label = self.categories.index(category)
+            for img in glob.glob(path + self.Mac_Iteration):
                 if (img is not None):
                   
                     img0 = cv2.imread(img) # Image read
-                    print("image read"+str(self.counter))
                     self.process_image(img0)
 
         self.save_data()
@@ -76,7 +71,7 @@ class data_prep():
             cnt1 = 0
             # compute rectangle (minimum area)
             self.X, self.Y, self.W, self.H = cv2.boundingRect(cnt0)
-        print("COMPUTER MIN BOUNDING RECT")
+        
 
 
 
@@ -85,15 +80,44 @@ class data_prep():
     # crop image following the rectangle
         cropped_image = self.thresh[int(self.Y):int(self.Y + self.H), int(self.X):int(self.X + self.W)]
         cropped_image = cv2.resize(cropped_image, (10,10), interpolation=cv2.INTER_AREA)
-        feature1=pixel_intensity(cropped_image).flatten()
-        self.data.append([feature1,self.label])
+        self.extract_features(cropped_image)
+
+
+
+        
+
+    
+
+
+
+    def extract_features(self,cropped_image):
+        features=[]
+       
+        myFuncs = {'aspect_ratio':aspect_ratio, 'canny_edge':canny_edge, 'pixel_intensity':pixel_intensity}
+
+        for feature in self.selected_features:
+            print(feature)
+            try: 
+                features = np.append(features,myFuncs[feature](cropped_image).flatten())
+            except:
+                pass
+            try:
+                features = np.append(features,myFuncs[feature](cropped_image))          
+            except:
+                pass
+            try:
+                features = np.append(features,myFuncs[feature](24,8,cropped_image))          
+            except:
+                pass
+
+
+        self.data.append([features,self.label])
         self.counter = self.counter + 1
         
 
 
 
     def save_data(self):
-            print("AAAAAAA")
             pick_in = open('data.pickle','wb')
             pickle.dump(self.data, pick_in)
             pick_in.close()
