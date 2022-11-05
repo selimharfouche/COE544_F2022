@@ -1,5 +1,5 @@
 import cv2, glob, os, random
-
+from sklearn import preprocessing
 from sklearn.model_selection import *
 from A_helper_data_prep import *
 from pickle import dump
@@ -91,13 +91,16 @@ class data_prep:
 
         # Counter for total number of images
         self.counter = 0
-
+        # Added LabelEncoder (encodes class labels into integers)
+        le = preprocessing.LabelEncoder()
+        le.fit_transform(self.categories)
+        self.mapping_labels = dict(zip(le.classes_, range(len(le.classes_))))
     def prep_data(self):
-        for category in self.categories:
+        for category in self.mapping_labels.keys():
             path = os.path.join(self.directory_training_data, category)
 
             # setting label to be examined
-            self.label = self.categories.index(category)
+            self.label = self.mapping_labels[category]
 
             # reading images corresponding to the label
             for img in glob.glob(path + self.iteration):
@@ -166,7 +169,7 @@ class data_prep:
             "pixel_intensity": pixel_intensity,
             "sobel_edge": sobel_edge,
             "canny_edge": canny_edge,
-            "LocalBinaryPatterns": LocalBinaryPatterns,
+            #"LocalBinaryPatterns": LocalBinaryPatterns,
         }
 
         for feature in self.selected_features:
@@ -195,7 +198,7 @@ class data_prep:
         features = []
         labels = []
         for features1, label in data:
-            features.append(features1)
+            features.append(features1.flatten())
             labels.append(label)
         X_train, X_test, Y_train, Y_test = train_test_split(
             features, labels, test_size=self.test_size

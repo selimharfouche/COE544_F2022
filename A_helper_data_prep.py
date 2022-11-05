@@ -195,24 +195,24 @@ def canny_edge(cropped_image):
     edges = cv2.Canny(image=cropped_image, threshold1=100, threshold2=200) # Canny Edge Detection
     return edges
 
-from skimage import feature
-
-###########################################################################
-###########################################################################
-
-###########################################################################
-###########################################################################
-#Feature 7: Local Binary Patterns
-def LocalBinaryPatterns(numPoints, radius, image, eps=1e-7):
-	
-	lbp = feature.local_binary_pattern(image, numPoints, radius, method="uniform")
-	(hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, numPoints + 3), range=(0, numPoints + 2))
-	
-	hist = hist.astype("float")
-	hist /= (hist.sum() + eps)
-    
-	# return the histogram of Local Binary Patterns
-	return hist
+# from skimage import feature
+#
+# ###########################################################################
+# ###########################################################################
+#
+# ###########################################################################
+# ###########################################################################
+# #Feature 7: Local Binary Patterns
+# def LocalBinaryPatterns(numPoints, radius, image, eps=1e-7):
+#
+# 	lbp = feature.local_binary_pattern(image, numPoints, radius, method="uniform")
+# 	(hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, numPoints + 3), range=(0, numPoints + 2))
+#
+# 	hist = hist.astype("float")
+# 	hist /= (hist.sum() + eps)
+#
+# 	# return the histogram of Local Binary Patterns
+# 	return hist
 ###########################################################################
 ###########################################################################
 
