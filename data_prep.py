@@ -1,4 +1,4 @@
-import cv2, glob, os, pickle, random
+import cv2, glob, os, random
 
 from sklearn.model_selection import *
 from A_helper_data_prep import *
@@ -183,12 +183,6 @@ class data_prep():
 
     def save_data(self):
         print("Number of images processed: "+str(self.counter))
-        # pick_in = open('data.pickle','wb')
-        # pickle.dump(self.data, pick_in)
-        # pick_in.close()
-        # pick_in = open('data.pickle', 'rb')
-        # data = pickle.load(pick_in)
-        # pick_in.close()
         data = self.data
         random.shuffle(data)
         features = []
