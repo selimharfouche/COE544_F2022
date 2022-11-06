@@ -114,7 +114,7 @@ class SVM_class:
 
 
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
-        grid = GridSearchCV(clf, param_grid, refit = True, cv = 10,return_train_score=True, verbose = 10)
+        grid = GridSearchCV(clf, param_grid, refit = True, cv = 2,return_train_score=True, verbose = 10)
         
         # fitting the model for grid search
         grid.fit(X_train, Y_train)

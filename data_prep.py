@@ -28,7 +28,9 @@ class data_prep:
         feature9="",
         feature10="",
         feature11="",
+        uploaded=False,
     ):
+        self.uploaded=uploaded
 
         # setting the iteration parameter depending on the operating system
         if microsoft_windows:
@@ -102,19 +104,47 @@ class data_prep:
         self.label = None
 
     def prep_data(self):
-        for category in self.mapping_labels.keys():
-            path = os.path.join(self.directory_training_data, category)
+        if self.uploaded:
+            img0 = cv2.imread("datasets/uploaded_images/website_upload.png")
+            print("image read success")
+            self.label="+"
+            # convert to black and white and identify contours
+            self.process_image(img0)
+            # compute bouding retangle
+            self.compute_bounding_rect()
+            # extract image from bonding rectangle
+            self.crop_image()
+            # extract features
+            self.extract_features()
+            features = []
+            labels = []
+            for features1, label in self.data:
+                features.append(features1)
+                labels.append(label)
+            X_test=features
+            print("Xtest")
+            print(X_test)
+            dump(X_test, open("data/X_test_uploaded.pkl", "wb"))
+        else:
+            for category in self.mapping_labels.keys():
+                path = os.path.join(self.directory_training_data, category)
 
-            # setting label to be examined
-            self.label = self.mapping_labels[category]
+                # setting label to be examined
+                self.label = self.mapping_labels[category]
 
-            # reading images corresponding to the label
-            for img in glob.glob(path + self.iteration):
-                if img is not None:
-                    img0 = cv2.imread(img)
-                    self.process_image(img0)
-
-        self.save_data()
+                # reading images corresponding to the label
+                for img in glob.glob(path + self.iteration):
+                    if img is not None:
+                        img0 = cv2.imread(img)
+                        # convert to black and white and identify contours
+                        self.process_image(img0)
+                        # compute bouding retangle
+                        self.compute_bounding_rect()
+                        # extract image from bonding rectangle
+                        self.crop_image()
+                        # extract features
+                        self.extract_features()
+            self.save_data()
 
     def process_image(self, img0):
 
@@ -126,11 +156,7 @@ class data_prep:
             self.thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
 
-        # compute bouding retangle
-        self.compute_bounding_rect()
 
-        # extract image from bouding rectangle
-        self.crop_image()
 
     def compute_bounding_rect(self):
         if len(self.contours) > 1:
@@ -161,9 +187,11 @@ class data_prep:
         cropped_image = cv2.resize(
             cropped_image, (10, 10), interpolation=cv2.INTER_AREA
         )
-        self.extract_features(cropped_image)
+        self.cropped_image=cropped_image
+        
 
-    def extract_features(self, cropped_image):
+    def extract_features(self):
+        cropped_image=self.cropped_image
         features = []
         myFuncs = {
             "aspect_ratio": aspect_ratio,
@@ -176,26 +204,32 @@ class data_prep:
             "sobel_edge": sobel_edge,
             "canny_edge": canny_edge,
             "HOG": HOG,
-            #"LocalBinaryPatterns": LocalBinaryPatterns,
+            "LocalBinaryPatterns": LocalBinaryPatterns,
         }
 
         for feature in self.selected_features:
             try:
-                features = np.append(
-                    features, myFuncs[feature](cropped_image).flatten()
-                )
-            except:
-                pass
-            try:
                 features = np.append(features, myFuncs[feature](cropped_image))
             except:
-                pass
-            try:
-                features = np.append(features, myFuncs[feature](24, 8, cropped_image))
-            except:
-                pass
+                try:
+                    features = np.append(
+                        features, myFuncs[feature](cropped_image).flatten()
+                    )
+                except:
+                    try:
+                        features = np.append(features, myFuncs[feature](24, 8, cropped_image))
+                    except:
+                        pass
+                
+            
+            
+                
+            
+            
 
         self.data.append([features, self.label])
+        print(self.label)
+        print("LABEL")
         self.counter = self.counter + 1
 
     def save_data(self):
