@@ -75,9 +75,9 @@ class data_prep:
         else:
             self.selected_features=features_array
 
-        print("features to be used:")
-        for feature in self.selected_features:
-            print(feature)
+        # print("features to be used:")
+        # for feature in self.selected_features:
+        #     print(feature)
 
         # Counter for total number of images
         self.counter = 0
@@ -90,7 +90,7 @@ class data_prep:
     def prep_data(self):
         if self.uploaded:
             img0 = cv2.imread("datasets/uploaded_images/website_upload.png")
-            print("image read success")
+            # print("image read success")
             self.label="+"
             # convert to black and white and identify contours
             self.process_image(img0)
@@ -106,8 +106,8 @@ class data_prep:
                 features.append(features1)
                 labels.append(label)
             X_test=features
-            print("Xtest")
-            print(X_test)
+            # print("Xtest")
+            # print(X_test)
             dump(X_test, open("data/X_test_uploaded.pkl", "wb"))
         else:
             for category in self.mapping_labels.keys():
@@ -223,14 +223,14 @@ class data_prep:
         for features1, label in data:
             features.append(features1)
             labels.append(label)
-        print("length of features")
-        print(len(features[0]))
+        # print("length of features")
+        # print(len(features[0]))
 
         X_train, X_test, Y_train, Y_test = train_test_split(
             features, labels, test_size=self.test_size
         )
-        print("length of X_test")
-        print(len(X_test[0]))
+        # print("length of X_test")
+        # print(len(X_test[0]))
 
         dump(X_train, open("data/X_train.pkl", "wb"))
         dump(X_test, open("data/X_test.pkl", "wb"))

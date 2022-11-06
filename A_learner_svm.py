@@ -1,7 +1,8 @@
 ############################################################
 # SVM Trainer
-# Trains an SVM model (SVC, NuSVC or LinearSVC) 
-# Does preprocessing SplineTransformer or StandardScaler
+# Trains an SVM model 
+# SVC, NuSVC or LinearSVC
+# 
 # Transform Data (A FAIRE PLUS DE RECHERCHE)
 # Learn Digits on train subsets (A FAIRE PLUS DE RECHERCHE)
 # Predict the value of the digit on the test subset (A FAIRE PLUS DE RECHERCHE)
@@ -53,6 +54,7 @@ class SVM_class:
         self.cv=k_fold
 
     def train(self):
+        print("SVM TRAINING STARTED")
         clf=self.clf
         scaler=self.scaler
         confusion_matrix=self.confusion_matrix

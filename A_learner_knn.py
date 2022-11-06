@@ -2,13 +2,12 @@ from sklearn.neighbors import KNeighborsClassifier
 from pickle import load
 from sklearn.metrics import accuracy_score
 
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from joblib import load, dump
 
 
-
 class KNN_class():
-    def __init__(self,scaler="ST") -> None:
+    def __init__(self,scaler="ST"):
         self.scaler=scaler
 
     def train(self):
@@ -30,10 +29,11 @@ class KNN_class():
 
         if scaler=="ST":
             from sklearn.preprocessing import SplineTransformer
-            self.scaler = SplineTransformer()
+            scaler = SplineTransformer()
         else:
             from sklearn.preprocessing import StandardScaler
-            self.scaler = StandardScaler()
+            scaler = StandardScaler()
+
         X_train = scaler.fit_transform(X_train)
         #we must apply the scaling to the test set that we computed for the training set
         X_test = scaler.transform(X_test)
@@ -46,7 +46,8 @@ class KNN_class():
         # retrieve the best estimator
         knn_best=grid.best_estimator_
         dump(knn_best, "best_estimators/KNN_BEST.joblib")
-        
+
+        print("Accuracy Score")
         print(accuracy_score(Y_test, knn_best.predict(X_test)))
 
         

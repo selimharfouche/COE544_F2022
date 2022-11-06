@@ -2,15 +2,18 @@ from data_prep import data_prep
 
 from joblib import dump, load
 
-from sklearn.preprocessing import StandardScaler, SplineTransformer
-
 
 import numpy as np
 
 
 from user_processing import user_processing
-up= user_processing(learner="KNN",features=["pixel_intensity","histogram"])
-up.give_label()
+
+user_processing.prepare_data(features=["pixel_intensity","histogram"])
+
+# up= user_processing(learner="ensemble")
+# up.give_label()
+
+
 
 
 # p1 = data_prep(numerical = True, features_array=["pixel_intensity","histogram"])
