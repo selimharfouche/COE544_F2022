@@ -32,6 +32,26 @@ class user_processing:
             print(estimator.predict(X_test))
             print("probability")
             print(np.max(estimator.predict_proba(X_test)))
+            
+        
+        if self.learner=="KNN":
+            from A_learner_knn import KNN_class
+            knn = KNN_class()
+            knn.train()
+            X_test = load(open('data/X_test.pkl', 'rb'))
+            estimator = load("best_estimators/KNN_BEST.joblib")
+            X_test = load(open('data/X_test_uploaded.pkl', 'rb'))
+            sc = load(open("data/KNN_fit_transformed.pkl", "rb"))
+
+            #transformation for svm
+            X_test = sc.transform(X_test)
+
+            print ("expected label")
+            print(estimator.predict(X_test))
+            print("probability")
+            print(np.max(estimator.predict_proba(X_test)))
+            
+        
 
 
 
