@@ -10,16 +10,13 @@
 
 ############################################################
 
-######################################################################
-############################## IMPORTS ###############################
-######################################################################
-
 from sklearn import svm, metrics
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler, SplineTransformer
-from sklearn.svm import SVC
-#from A_data_prep import X_train, X_test, Y_train, Y_test
 from sklearn.model_selection import GridSearchCV
+from joblib import load
+import joblib as jl
+import pickle
 import matplotlib.pyplot as plt
 from joblib import load, dump
 
@@ -30,150 +27,124 @@ Y_train = load(open('data/Y_train.pkl', 'rb'))
 
 
 
-
-
-######################################################################
-
-
 class SVM_class:
-######################################################################
-######################## CHOOSING SVM LEARNER ########################
-######################################################################
 
-    # SVC
-    clf = svm.SVC()
-    # # NuSVC
-    #clf = svm.NuSVC()
-    # # Linear SVC()
-    # clf = svm.LinearSVC()
+    def __init__(self,learner="SVC",sc="ST",confusion_matrix=True,classification_report=True,minimal_grid_search=True):
+        if learner=="SVC":
+            # https://scikit-learn.org/stable/modules/svm.html#scores-probabilities
+            self.clf = svm.SVC(probability=True)
+            
+        elif learner=="NuSVC":
+            self.clf = svm.NuSVC(probability=True)
+        else:
+            self.clf = svm.LinearSVC(probability=True)
+
+
+        # preprocessings
+        # https://scikit-learn.org/stable/modules/preprocessing.html#preprocessing
+        if sc=="ST":
+            self.sc = SplineTransformer()
+        else:
+            self.sc = StandardScaler()
+
+        self.confusion_matrix=confusion_matrix
+        self.classification_report=classification_report
+        self.minimal_grid_search=minimal_grid_search
+
+
+
+
+    
+    def train(self):
+        clf=self.clf
+        sc=self.sc
+        confusion_matrix=self.confusion_matrix
+        classification_report=self.classification_report
+        minimal_grid_search=self.minimal_grid_search
+
+        X_train = load(open('data/X_train.pkl', 'rb'))
+        X_test = load(open('data/X_test.pkl', 'rb'))
+        Y_test = load(open('data/Y_test.pkl', 'rb'))
+        Y_train = load(open('data/Y_train.pkl', 'rb'))
+
+
+        # Transforming Data
+        # Compute knot positions of splines.
+        # https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
+        X_train = sc.fit_transform(X_train)
+        X_test = sc.transform(X_test)
+
+        # training
+        # Learn the digits on the train subset
+        # https://datascience.stackexchange.com/questions/87361/when-should-i-use-fitx-train-and-when-should-i-fit-x-train-y-train
+        clf.fit(X_train, Y_train)
+
+        # Predict the value of the digit on the test subset
+        # https://stackoverflow.com/questions/62646058/how-does-the-predict-method-work-on-scikit-learn
+        predicted = clf.predict(X_test)
+
    
-###############################################################################
-
-######################################################################
-########################### PREPROCESSING ############################
-######################################################################
-    # https://scikit-learn.org/stable/modules/preprocessing.html#preprocessing
-    sc = SplineTransformer()
-    # sc = StandardScaler()
-######################################################################
-
-
-######################################################################
-######################## DATA TRANSFORMATION #########################
-######################################################################
-    # Transforming Data
-    # Compute knot positions of splines.
-    # https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
-    X_train = sc.fit_transform(X_train)
-    X_test = sc.transform(X_test)
-
-######################################################################
-############################# TRAINING ###############################
-######################################################################
-    # Learn the digits on the train subset
-    # https://datascience.stackexchange.com/questions/87361/when-should-i-use-fitx-train-and-when-should-i-fit-x-train-y-train
-    clf.fit(X_train, Y_train)
-
-    # Predict the value of the digit on the test subset
-    # https://stackoverflow.com/questions/62646058/how-does-the-predict-method-work-on-scikit-learn
-    predicted = clf.predict(X_test)
-
-    # https://scikit-learn.org/stable/modules/svm.html#scores-probabilities
-    clf = svm.SVC(probability=True) 
-######################################################################
-
-
-######################################################################
-############################# PLOTTING ###############################
-######################################################################
-    # Classification report
-    # print(
-    #     f"Classification report for classifier {clf}:\n"
-    #     f"{metrics.classification_report(Y_test, predicted,zero_division=1)}\n"
-    # )
-
-    # Confusion matrix
-    # We can also plot a :ref:`confusion matrix <confusion_matrix>` of the
-    # true digit values and the predicted digit values.
-
-    disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
-    disp.figure_.suptitle("Confusion Matrix")
-    print(f"Confusion matrix:\n{disp.confusion_matrix}")
-
-    plt.show()
-###############################################################################
+    ############################# PLOTTING ###############################
    
+        if classification_report:
+            print(
+                f"Classification report for classifier {clf}:\n"
+                f"{metrics.classification_report(Y_test, predicted,zero_division=1)}\n"
+            )
 
-######################################################################
-########################## GRID SEARCH CV ############################
-######################################################################
+        if confusion_matrix:
+            disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
+            disp.figure_.suptitle("Confusion Matrix")
+            print(f"Confusion matrix:\n{disp.confusion_matrix}")
+            plt.show()
 
+        # GridSearch CV
+        # https://www.vebuso.com/2020/03/svm-hyperparameter-tuning-using-gridsearchcv/   
+        if minimal_grid_search:
+            Cs = [0.1]
+            Gammas = [1]
+            Kernels = ['poly']
+        else:
+            # defining parameter range
+            Cs = [0.1, 1, 10, 100, 1000]
+            Gammas = [1, 0.1, 0.01, 0.001, 0.0001]
+            Kernels = ['rbf', 'poly', 'sigmoid', 'linear']
 
-    # GridSearch CV
-    # https://www.vebuso.com/2020/03/svm-hyperparameter-tuning-using-gridsearchcv/
-
-    # defining parameter range
-    # Cs = [0.1, 1, 10, 100, 1000]
-    # Gammas = [1, 0.1, 0.01, 0.001, 0.0001]
-    # Kernels = ['rbf', 'poly', 'sigmoid', 'linear']
-
-    Cs = [0.1]
-    Gammas = [1]
-    Kernels = ['poly']
-
-    # parameter grid using the range defined just above
-    param_grid = {'C': Cs, 
-                'gamma': Gammas,
-                'kernel': Kernels} 
-
-
-    # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
-    grid = GridSearchCV(SVC(), param_grid, refit = True, cv = 10,return_train_score=True, verbose = 10)
-    
-    # fitting the model for grid search
-    grid.fit(X_train, Y_train)
-######################################################################
+        # parameter grid using the range defined just above
+        param_grid = {'C': Cs, 
+                    'gamma': Gammas,
+                    'kernel': Kernels} 
 
 
-######################################################################
-########################## DEBUG-PRINTING ############################
-######################################################################
-    # # print best parameter after tuning
-    # print("Grid best parameters:")
-    # print(grid.best_params_)
-    
-    # # print how our model looks after hyper-parameter tuning
-    # svm_best=grid.best_estimator_
-    # print("Grid best estimator")
-    # print(svm_best)
-###############################################################################
-
-######################################################################
-######################### SAVING PARAMETERS ##########################
-######################################################################
-    # save the best parameters of the gridsearch
-    dump(grid.best_estimator_, "best_estimators/svm_best1.joblib")
-    print ("parameters saved in best_estimators/svm_best1.joblib ")
-    print(grid.best_estimator_)
-    print (grid.best_params_)
-    print (grid.best_score_)
-###############################################################################
+        # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
+        grid = GridSearchCV(clf, param_grid, refit = True, cv = 10,return_train_score=True, verbose = 10)
+        
+        # fitting the model for grid search
+        grid.fit(X_train, Y_train)
+    ######################################################################
 
 
-############################################################################################################################################
-############################################################################################################################################
-############################################################################################################################################
-############################################################################################################################################
-############################################################################################################################################
-    # scores = [x[1] for x in clf.grid_scores_]
-    # scores = np.array(scores).reshape(len(Cs), len(Gammas))
+    ######################################################################
+    ########################## DEBUG-PRINTING ############################
+    ######################################################################
+        # # print best parameter after tuning
+        # print("Grid best parameters:")
+        # print(grid.best_params_)
+        
+        # # print how our model looks after hyper-parameter tuning
+        # svm_best=grid.best_estimator_
+        # print("Grid best estimator")
+        # print(svm_best)
+    ###############################################################################
 
-    # for ind, i in enumerate(Cs):
-    #     plt.plot(Gammas, scores[ind], label='C: ' + str(i))
-    #     plt.legend()
-    #     plt.xlabel('Gamma')
-    #     plt.ylabel('Mean score')
-    #     plt.show()
-    
-    # # print classification report
-    # print(classification_report(Y_test, grid_predictions))
+    ######################################################################
+    ######################### SAVING PARAMETERS ##########################
+    ######################################################################
+        # save the best parameters of the gridsearch
+        dump(grid.best_estimator_, "best_estimators/svm_best1.joblib")
+        print ("parameters saved in best_estimators/svm_best1.joblib ")
+        print(grid.best_estimator_)
+        print (grid.best_params_)
+        print (grid.best_score_)
+    ###############################################################################
+
