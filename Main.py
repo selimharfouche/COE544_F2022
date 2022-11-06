@@ -9,7 +9,7 @@ import numpy as np
 
 
 from user_processing import user_processing
-up= user_processing(learner="SVM",features=["pixel_intensity","histogram"])
+up= user_processing(learner="KNN",features=["pixel_intensity","histogram"])
 up.give_label()
 
 
