@@ -1,15 +1,34 @@
-from A_learner_svm import svm_best
-from A_learner_rf import rf_best
-from A_learner_knn import knn_best
-from A_data_prep import X_test, X_train, Y_test, Y_train
-from sklearn.ensemble import VotingClassifier#create a dictionary of our models
+
+
+from sklearn.ensemble import VotingClassifier
 from sklearn.metrics import accuracy_score
-estimators=[("knn", knn_best), ("rf", rf_best), ("svm", svm_best)]#create our voting classifier, inputting our models
-ensemble = VotingClassifier(estimators, voting="hard")
-#fit model to training data
-ensemble.fit(X_train, Y_train)#test our model on the test data
-print("AAAAAA")
-print(ensemble.score(X_test, Y_test))
+from joblib import load, dump
+
+
+
+class voting_classifier_class():
+    def __init__(self,voting="hard"):
+        self.voting=voting
+
+    def train(self):
+        X_train = load(open('data/X_train.pkl', 'rb'))
+        X_test = load(open('data/X_test.pkl', 'rb'))
+        Y_test = load(open('data/Y_test.pkl', 'rb'))
+        Y_train = load(open('data/Y_train.pkl', 'rb'))
+
+        svm_best = load("best_estimators/SVM_BEST.joblib")
+        knn_best = load("best_estimators/KNN_BEST.joblib")
+
+        estimators=[("knn", knn_best), ("svm", svm_best)]#create our voting classifier, inputting our models
+
+        ensemble = VotingClassifier(estimators, voting=self.voting)
+        
+        #fit model to training data
+        ensemble.fit(X_train, Y_train)#test our model on the test data
+        dump(ensemble, "best_estimators/ENSEMBLE.joblib")
+        
+        #print(ensemble.score(X_test, Y_test))
+
 # # Voting Classifier with hard voting
 # vot_hard = VotingClassifier(estimators, voting ='hard')
 # vot_hard.fit(X_train, Y_train)
