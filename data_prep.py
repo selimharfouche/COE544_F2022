@@ -1,5 +1,5 @@
 import cv2, glob, os, random
-
+from sklearn import preprocessing
 from sklearn.model_selection import *
 from A_helper_data_prep import *
 from pickle import dump
@@ -27,6 +27,7 @@ class data_prep:
         feature8="",
         feature9="",
         feature10="",
+        feature11="",
     ):
 
         # setting the iteration parameter depending on the operating system
@@ -75,6 +76,7 @@ class data_prep:
             feature8 = "sobel_edge"
             feature9 = "canny_edge"
             feature10 = "LocalBinaryPatterns"
+            feature11 = "HOG"
 
         # setting up the features to be used
         self.selected_features = [
@@ -88,15 +90,16 @@ class data_prep:
             feature8,
             feature9,
             feature10,
+            feature11,
         ]
 
         # Counter for total number of images
         self.counter = 0
-        
         # Added LabelEncoder (encodes class labels into integers)
         le = preprocessing.LabelEncoder()
         le.fit_transform(self.categories)
         self.mapping_labels = dict(zip(le.classes_, range(len(le.classes_))))
+        self.label = None
 
     def prep_data(self):
         for category in self.mapping_labels.keys():
@@ -172,7 +175,8 @@ class data_prep:
             "pixel_intensity": pixel_intensity,
             "sobel_edge": sobel_edge,
             "canny_edge": canny_edge,
-            "LocalBinaryPatterns": LocalBinaryPatterns,
+            "HOG": HOG,
+            #"LocalBinaryPatterns": LocalBinaryPatterns,
         }
 
         for feature in self.selected_features:

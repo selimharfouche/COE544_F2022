@@ -143,6 +143,7 @@ def left_half_img(cropped_image):
 # Feature 3: Projection histogram
 
 def histogram(cropped_image):
+
     cropped_image[cropped_image == 0] = 1
     cropped_image[cropped_image == 255] = 0
 
@@ -154,13 +155,12 @@ def histogram(cropped_image):
     blankImage = np.zeros((height, width), np.uint8)
 
     # Draw a line for each row
-    for row in range(height):
-        cv2.line(blankImage, (0, row), (int(hor_proj[row] * width / height), row), (255, 255, 255), 1)
+    for idx, value in enumerate(hor_proj):
+        cv2.line(blankImage, (0, idx), (width-int(value), idx), (255, 255, 255), 1)
 
     # Save result
-    blankImage = cv2.resize(blankImage, (128, 128), interpolation=cv2.INTER_AREA)
-    
-    
+    blankImage = cv2.resize(blankImage, (8, 8), interpolation=cv2.INTER_AREA)
+
     return blankImage
 ###########################################################################
 ###########################################################################
@@ -196,26 +196,48 @@ def canny_edge(cropped_image):
     return edges
 
 from skimage import feature
-
-###########################################################################
-###########################################################################
-
-###########################################################################
-###########################################################################
+from skimage.feature import hog
+#
+# ###########################################################################
+# ###########################################################################
+#
+# ###########################################################################
+# ###########################################################################
 #Feature 7: Local Binary Patterns
 def LocalBinaryPatterns(numPoints, radius, image, eps=1e-7):
-	
+
 	lbp = feature.local_binary_pattern(image, numPoints, radius, method="uniform")
 	(hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, numPoints + 3), range=(0, numPoints + 2))
-	
+
 	hist = hist.astype("float")
 	hist /= (hist.sum() + eps)
-    
+
 	# return the histogram of Local Binary Patterns
 	return hist
 ###########################################################################
 ###########################################################################
 
+
+#Feature 7: HOG
+def HOG(cropped_image):
+
+    cv2.imwrite(("cropped_temp.png"), cropped_image)
+
+    img1 = cv2.cvtColor(cv2.imread("cropped_temp.png"), cv2.COLOR_BGR2GRAY)
+    ret, thresh = cv2.threshold(img1, 127, 255, cv2.THRESH_BINARY_INV)
+
+    cv2.imwrite(("test.png"), thresh)
+
+    # resizing image
+    resized_img = resize(thresh, (8 * 4, 8 * 4))
+
+    # creating hog features
+    fd, hog_image = hog(cropped_image, orientations=9, pixels_per_cell=(8, 8),
+                        cells_per_block=(2, 2), visualize=True, multichannel=False)
+
+    hog_image = cv2.resize(cropped_image, (16, 16), interpolation=cv2.INTER_AREA)
+
+    return hog_image
 
 ###########################################################################
 ###########################################################################

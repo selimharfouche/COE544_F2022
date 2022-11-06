@@ -151,7 +151,7 @@ for category in categories:
 ############################# RENDERING ##############################
 ######################################################################
     # resize image
-    cropped_image = cv2.resize(cropped_image, (10,10), interpolation=cv2.INTER_AREA)
+    #cropped_image = cv2.resize(cropped_image, (10,10), interpolation=cv2.INTER_AREA)
 
 
 
@@ -186,9 +186,6 @@ for category in categories:
     # feature3 LocalBinaryPatterns(24,8,cropped_image)
     # To BE Completed
 
-
-
-   
     
     data.append([feature1,label])
 
@@ -225,9 +222,9 @@ labels = []
 ########################## DATA SEPARATION ###########################
 ######################################################################
 
-for features1, label in data:
-    features.append(features1)
-    labels.append(label)
+# for features1, label in data:
+#     features.append(features1)
+#     labels.append(label)
 
 # Separate the data into training and test data sets
 

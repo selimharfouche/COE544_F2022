@@ -146,5 +146,8 @@ class SVM_class:
         print(grid.best_estimator_)
         print (grid.best_params_)
         print (grid.best_score_)
+
+        prediction = grid.best_estimator_.predict(X_test)
+        print (classification_report(Y_test,prediction))
     ###############################################################################
 
