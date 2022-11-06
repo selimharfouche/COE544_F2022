@@ -69,6 +69,7 @@ class SVM_class:
         # https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
         X_train = sc.fit_transform(X_train)
         X_test = sc.transform(X_test)
+        dump(X_test, open("data/X_test.pkl", "wb"))
 
         # training
         # Learn the digits on the train subset
@@ -137,8 +138,8 @@ class SVM_class:
     ######################### SAVING PARAMETERS ##########################
     ######################################################################
         # save the best parameters of the gridsearch
-        dump(grid.best_estimator_, "best_estimators/svm_best1.joblib")
-        print ("parameters saved in best_estimators/svm_best1.joblib ")
+        dump(grid.best_estimator_, "best_estimators/SVM_BEST.joblib")
+        print ("parameters saved in best_estimators/SVM_BEST.joblib ")
         print(grid.best_estimator_)
         print (grid.best_params_)
         print (grid.best_score_)
