@@ -18,7 +18,7 @@ class user_processing:
 
         if self.learner=="SVM":
             from A_learner_svm import SVM_class
-            svm = SVM_class(confusion_matrix=False)
+            svm = SVM_class(confusion_matrix=False,minimal_grid_search=False)
             svm.train()
             X_test = load(open('data/X_test.pkl', 'rb'))
             estimator = load("best_estimators/SVM_BEST.joblib")

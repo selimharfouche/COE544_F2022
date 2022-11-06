@@ -17,17 +17,7 @@ class data_prep:
         lower_case=False,
         upper_case=False,
         all_features=False,
-        feature1="",
-        feature2="",
-        feature3="",
-        feature4="",
-        feature5="",
-        feature6="",
-        feature7="",
-        feature8="",
-        feature9="",
-        feature10="",
-        feature11="",
+        features_array=[],
         uploaded=False,
     ):
         self.uploaded=uploaded
@@ -68,32 +58,26 @@ class data_prep:
             self.categories = alphanumerical_category
 
         if all_features:
-            feature1 = "aspect_ratio"
-            feature2 = "top_half_img"
-            feature3 = "lower_half_img"
-            feature4 = "right_half_img"
-            feature5 = "left_half_img"
-            feature6 = "histogram"
-            feature7 = "pixel_intensity"
-            feature8 = "sobel_edge"
-            feature9 = "canny_edge"
-            feature10 = "LocalBinaryPatterns"
-            feature11 = "HOG"
+            # setting up the features to be used
+            self.selected_features = [
+                "aspect_ratio",
+                "top_half_img",
+                "lower_half_img",
+                "right_half_img",
+                "left_half_img",
+                "histogram",
+                "pixel_intensity",
+                "sobel_edge",
+                "canny_edge",
+                "LocalBinaryPatterns",
+                "HOG",
+            ]
+        else:
+            self.selected_features=features_array
 
-        # setting up the features to be used
-        self.selected_features = [
-            feature1,
-            feature2,
-            feature3,
-            feature4,
-            feature5,
-            feature6,
-            feature7,
-            feature8,
-            feature9,
-            feature10,
-            feature11,
-        ]
+        print("features to be used:")
+        for feature in self.selected_features:
+            print(feature)
 
         # Counter for total number of images
         self.counter = 0
@@ -228,8 +212,6 @@ class data_prep:
             
 
         self.data.append([features, self.label])
-        print(self.label)
-        print("LABEL")
         self.counter = self.counter + 1
 
     def save_data(self):
@@ -241,9 +223,14 @@ class data_prep:
         for features1, label in data:
             features.append(features1)
             labels.append(label)
+        print("length of features")
+        print(len(features[0]))
+
         X_train, X_test, Y_train, Y_test = train_test_split(
             features, labels, test_size=self.test_size
         )
+        print("length of X_test")
+        print(len(X_test[0]))
 
         dump(X_train, open("data/X_train.pkl", "wb"))
         dump(X_test, open("data/X_test.pkl", "wb"))

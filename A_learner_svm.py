@@ -29,7 +29,7 @@ Y_train = load(open('data/Y_train.pkl', 'rb'))
 
 class SVM_class:
 
-    def __init__(self,learner="SVC",sc="ST",confusion_matrix=True,classification_report=True,minimal_grid_search=True):
+    def __init__(self,learner="SVC",sc="ST",confusion_matrix=True,classification_report=True,minimal_grid_search=True, k_fold=2):
         if learner=="SVC":
             # https://scikit-learn.org/stable/modules/svm.html#scores-probabilities
             self.clf = svm.SVC(probability=True)
@@ -50,6 +50,7 @@ class SVM_class:
         self.confusion_matrix=confusion_matrix
         self.classification_report=classification_report
         self.minimal_grid_search=minimal_grid_search
+        self.cv=k_fold
 
     def train(self):
         clf=self.clf
@@ -68,6 +69,7 @@ class SVM_class:
         # Compute knot positions of splines.
         # https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
         X_train = sc.fit_transform(X_train)
+        dump(sc, open("data/SVM_fit_transformed.pkl", "wb"))
         X_test = sc.transform(X_test)
         dump(X_test, open("data/X_test.pkl", "wb"))
 
@@ -114,34 +116,20 @@ class SVM_class:
 
 
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
-        grid = GridSearchCV(clf, param_grid, refit = True, cv = 2,return_train_score=True, verbose = 10)
+        grid = GridSearchCV(clf, param_grid, refit = True, cv = self.cv,return_train_score=True, verbose = 10)
         
         # fitting the model for grid search
         grid.fit(X_train, Y_train)
     ######################################################################
 
-
-    ######################################################################
-    ########################## DEBUG-PRINTING ############################
-    ######################################################################
-        # # print best parameter after tuning
-        # print("Grid best parameters:")
-        # print(grid.best_params_)
-        
-        # # print how our model looks after hyper-parameter tuning
-        # svm_best=grid.best_estimator_
-        # print("Grid best estimator")
-        # print(svm_best)
-    ###############################################################################
-
-    ######################################################################
-    ######################### SAVING PARAMETERS ##########################
-    ######################################################################
         # save the best parameters of the gridsearch
         dump(grid.best_estimator_, "best_estimators/SVM_BEST.joblib")
         print ("parameters saved in best_estimators/SVM_BEST.joblib ")
+        print("Grid best estimator:")
         print(grid.best_estimator_)
+        print("Grid best parameters:")
         print (grid.best_params_)
+        print("Grid best score:")
         print (grid.best_score_)
 
         # prediction = grid.best_estimator_.predict(X_test)
