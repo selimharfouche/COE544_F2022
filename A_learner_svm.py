@@ -51,10 +51,6 @@ class SVM_class:
         self.classification_report=classification_report
         self.minimal_grid_search=minimal_grid_search
 
-
-
-
-    
     def train(self):
         clf=self.clf
         sc=self.sc
@@ -147,7 +143,7 @@ class SVM_class:
         print (grid.best_params_)
         print (grid.best_score_)
 
-        prediction = grid.best_estimator_.predict(X_test)
-        print (classification_report(Y_test,prediction))
+        # prediction = grid.best_estimator_.predict(X_test)
+        # print (classification_report(Y_test, prediction))
     ###############################################################################
 
