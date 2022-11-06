@@ -26,6 +26,7 @@ class data_prep:
         feature8="",
         feature9="",
         feature10="",
+        feature11="",
     ):
 
         # setting the iteration parameter depending on the operating system
@@ -74,6 +75,7 @@ class data_prep:
             feature8 = "sobel_edge"
             feature9 = "canny_edge"
             feature10 = "LocalBinaryPatterns"
+            feature11 = "HOG"
 
         # setting up the features to be used
         self.selected_features = [
@@ -87,6 +89,7 @@ class data_prep:
             feature8,
             feature9,
             feature10,
+            feature11,
         ]
 
         # Counter for total number of images
@@ -95,6 +98,8 @@ class data_prep:
         le = preprocessing.LabelEncoder()
         le.fit_transform(self.categories)
         self.mapping_labels = dict(zip(le.classes_, range(len(le.classes_))))
+        self.label = None
+
     def prep_data(self):
         for category in self.mapping_labels.keys():
             path = os.path.join(self.directory_training_data, category)
@@ -169,6 +174,7 @@ class data_prep:
             "pixel_intensity": pixel_intensity,
             "sobel_edge": sobel_edge,
             "canny_edge": canny_edge,
+            "HOG": HOG,
             #"LocalBinaryPatterns": LocalBinaryPatterns,
         }
 
@@ -198,7 +204,7 @@ class data_prep:
         features = []
         labels = []
         for features1, label in data:
-            features.append(features1.flatten())
+            features.append(features1)
             labels.append(label)
         X_train, X_test, Y_train, Y_test = train_test_split(
             features, labels, test_size=self.test_size
