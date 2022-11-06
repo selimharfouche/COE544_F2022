@@ -29,7 +29,7 @@ Y_train = load(open('data/Y_train.pkl', 'rb'))
 
 class SVM_class:
 
-    def __init__(self,learner="SVC",sc="ST",confusion_matrix=True,classification_report=True,minimal_grid_search=True, k_fold=2):
+    def __init__(self,learner="SVC",scaler="ST",confusion_matrix=True,classification_report=True,minimal_grid_search=True, k_fold=2):
         if learner=="SVC":
             # https://scikit-learn.org/stable/modules/svm.html#scores-probabilities
             self.clf = svm.SVC(probability=True)
@@ -42,10 +42,10 @@ class SVM_class:
 
         # preprocessings
         # https://scikit-learn.org/stable/modules/preprocessing.html#preprocessing
-        if sc=="ST":
-            self.sc = SplineTransformer()
+        if scaler=="ST":
+            self.scaler = SplineTransformer()
         else:
-            self.sc = StandardScaler()
+            self.scaler = StandardScaler()
 
         self.confusion_matrix=confusion_matrix
         self.classification_report=classification_report
@@ -54,7 +54,7 @@ class SVM_class:
 
     def train(self):
         clf=self.clf
-        sc=self.sc
+        scaler=self.scaler
         confusion_matrix=self.confusion_matrix
         classification_report=self.classification_report
         minimal_grid_search=self.minimal_grid_search
@@ -68,9 +68,9 @@ class SVM_class:
         # Transforming Data
         # Compute knot positions of splines.
         # https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
-        X_train = sc.fit_transform(X_train)
-        dump(sc, open("data/SVM_fit_transformed.pkl", "wb"))
-        X_test = sc.transform(X_test)
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
+        dump(scaler, open("data/SVM_fit_transformed.pkl", "wb"))
         dump(X_test, open("data/X_test.pkl", "wb"))
 
         # training
