@@ -7,8 +7,9 @@ from joblib import load, dump
 
 
 class KNN_class():
-    def __init__(self,scaler="ST"):
+    def __init__(self,scaler="ST",verbose=0):
         self.scaler=scaler
+        self.verbose = verbose
 
     def train(self):
         scaler=self.scaler
@@ -20,7 +21,7 @@ class KNN_class():
         #Grid search 
         parameters = {'n_neighbors':list(range(1, 20)) ,'weights': ['uniform', 'distance']}
         knn = KNeighborsClassifier()
-        grid_search_knn = GridSearchCV(knn, parameters, cv=2, scoring='accuracy', return_train_score=True, verbose=10)
+        grid_search_knn = GridSearchCV(knn, parameters, cv=2, scoring='accuracy', return_train_score=True, verbose=self.verbose)
 
         # chosing scaler
         if scaler=="ST":
