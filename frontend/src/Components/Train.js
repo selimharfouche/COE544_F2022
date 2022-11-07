@@ -62,68 +62,38 @@ function Train() {
             }
          }
         
-        //  "",
-        //  "",
-        //  "",
-        //  "",
-        //  "",
-        //  "",
-        //  "",
-        //  "",
-        //  "",
-        //  "",
-        //  "",
+    
 
     var featureName=[
         {
             value:1,
-            label:"aspect_ratio"
+            label:"pixel_intensity"
             
         },
         {
             value:2,
-            label:"top_half_img"
-        },
-        {
-            value:3,
-            label:"lower_half_img"
-        },
-        {
-            value:4,
-            label:"right_half_img"
-        },
-        {
-            value:5,
-            label:"left_half_img"
-        },
-        {
-            value:6,
             label:"histogram"
         },
         {
-            value:7,
-            label:"pixel_intensity"
+            value:3,
+            label:"Projection Histogram"
         },
         {
-            value:8,
+            value:4,
+            label:"Pixel Intensity"
+        },
+        {
+            value:5,
             label:"sobel_edge"
         },
         {
-            value:9,
-            label:"canny_edge"
+            value:6,
+            label:"Canny Edge"
         },
         {
-            value:10,
-            label:"LocalBinaryPatterns"
+            value:7,
+            label:"Local Binary Patterns"
         },
-        {
-            value:11,
-            label:"HOG"
-        },
-
-
-
-
 
     ]
     
@@ -155,8 +125,9 @@ function Train() {
                     <Radio.Group>
                         <Row><Radio value="SVM">SVM</Radio></Row>
                         <Row><Radio value="KNN">KNN</Radio></Row>
+                        <Row><Radio value="rfc">RFC</Radio></Row>
+                        <Row><Radio value="dt">DT</Radio></Row>
                         <Row><Radio value="ensemble">Ensemble</Radio></Row>
-                        <Row><Radio value="pre_trained">pre_trained</Radio></Row>
                     </Radio.Group>
                 </Form.Item>
 
