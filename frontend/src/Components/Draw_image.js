@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from '@mui/icons-material/Send';
 import IconButton from "@mui/material/IconButton";
@@ -11,6 +11,7 @@ function Draw_image() {
   // const [panZoom, setPanZoom] = useState(false);
   // const changeBrush = () => setPanZoom(!panZoom);
   const canvasRef = useRef(CanvasDraw);
+  const [axiosResponse, getAxiosResponse] = useState();
 
   const handleSubmit = async event => {
     const image64 = canvasRef.current.getDataURL("image/jpeg", null, '#FFF');
@@ -22,7 +23,14 @@ function Draw_image() {
         url: "http://127.0.0.1:5000/save-drawn-image",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
-      });
+      }).then(response =>{
+       
+        getAxiosResponse(response.status);
+        if (response.status==201) {
+          window.location =('/train')
+        }
+        console.log(response);
+     });
     } catch(error) {
       console.log(error)
     }

@@ -122,8 +122,7 @@ class SVM_class:
         param_grid = {'C': Cs, 
                     'gamma': Gammas,
                     'kernel': Kernels} 
-
-
+                    
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
         grid = GridSearchCV(clf, param_grid, refit = True, cv = self.cv,return_train_score=True, verbose = self.verbose)
         

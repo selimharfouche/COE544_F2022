@@ -52,7 +52,7 @@ def drawn_Image():
     filename = image_path+"website_upload.png"  
     with open(filename, 'wb') as f:
         f.write(imgdata)
-    return redirect ('/train', code=200)
+    return "goog" ,201
 
 
 
@@ -77,7 +77,7 @@ def train():
     #     print (form_response[i])
     
     #return form_response
-    return features
+    return features, 201
 
 
 
