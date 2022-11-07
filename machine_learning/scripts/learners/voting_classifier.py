@@ -13,8 +13,6 @@ class voting_classifier_class():
     def train(self):
         # relative path
         X_train = load(open('../processed_data/X_train.pkl', 'rb'))
-        X_test = load(open('../processed_data/X_test.pkl', 'rb'))
-        Y_test = load(open('../processed_data/Y_test.pkl', 'rb'))
         Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
 
         svm_best = load("../best_estimators/SVM_BEST.joblib")

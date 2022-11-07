@@ -33,6 +33,13 @@ from joblib import load, dump
 
 
 
+# relative path
+X_train = load(open('../processed_data/X_train.pkl', 'rb'))
+X_test = load(open('../processed_data/X_test.pkl', 'rb'))
+Y_test = load(open('../processed_data/Y_test.pkl', 'rb'))
+Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
+
+
 
 class SVM_class:
 
@@ -81,7 +88,7 @@ class SVM_class:
 
         # relative path
         dump(scaler, open("../processed_data/SVM_fit_transformed.pkl", "wb"))
-        dump(X_test, open("../processed_data/X_test.pkl", "wb"))
+        dump(X_test, open("../processed_data/X_test_transformed_svm.pkl", "wb"))
 
         # training
         # Learn the digits on the train subset

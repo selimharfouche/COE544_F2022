@@ -6,6 +6,8 @@ from sklearn.model_selection import GridSearchCV
 from joblib import load, dump
 
 
+
+
 class KNN_class():
     def __init__(self,scaler="ST",verbose=0):
         self.scaler=scaler
@@ -39,6 +41,7 @@ class KNN_class():
         #Save fitted scaler model to be used with new images or else model will not predict well
         # relative path
         dump(scaler, open("../processed_data/KNN_fit_transformed.pkl", "wb"))
+        dump(X_test, open("../processed_data/X_test_transformed_knn.pkl", "wb"))
 
 
         grid_search_knn.fit(X_train, Y_train)
