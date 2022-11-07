@@ -91,7 +91,6 @@ class user_processing:
 
             #transformation for knn
             X_test = sc.transform(X_test)
-
             print ("KNN expected label")
             print(estimator.predict(X_test))
             print("KNN probability")
@@ -106,7 +105,6 @@ class user_processing:
             # relative path
             try:
                 estimator = load("../best_estimators/ENSEMBLE.joblib")
-
             except:
                 estimator = load("../machine_learning/best_estimators/ENSEMBLE.joblib")
                 
@@ -116,6 +114,23 @@ class user_processing:
             print(np.max(estimator.predict_proba(X_test)))
 
             return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
+
+        if self.learner=="pre_trained":
+            try:
+                estimator = load("../best_estimators/pre_trained_model/svm_model1.sav")
+                sc = load(open("../best_estimators/pre_trained_model/std_scaler.bin", "rb"))
+            except:
+                estimator = load("../machine_learning/best_estimators/pre_trained_model/svm_model1.sav")
+                sc = load(open("../machine_learning/best_estimators/pre_trained_model/std_scaler.bin", "rb"))
+
+            X_test = sc.transform(X_test)
+            print ("pre_trained expected label")
+            print(estimator.predict(X_test))
+            print("pre_trained probability")
+            print(np.max(estimator.predict_proba(X_test)))
+            return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
+        
+            
 
 
             

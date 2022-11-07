@@ -89,8 +89,8 @@ def test():
     res = features.strip('][').split(',')
     print("features selected")
     print(res)
-    # user_processing.prepare_data(features=res)
-    # up= user_processing(learner=training_algorithm) 
-    # return str(up.give_label())
-    return "DFFFFF"
+    user_processing.prepare_data(features=res)
+    up= user_processing(learner=training_algorithm) 
+    return str(up.give_label())
+
 
