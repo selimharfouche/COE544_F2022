@@ -1,4 +1,3 @@
-
 numerical_category = [
     "0",
     "1",
