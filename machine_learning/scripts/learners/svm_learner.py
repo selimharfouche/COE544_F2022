@@ -34,13 +34,6 @@ from joblib import load, dump
 
 
 
-X_train = load(open('../machine_learning/data/X_train.pkl', 'rb'))
-X_test = load(open('../machine_learning/data/X_test.pkl', 'rb'))
-Y_test = load(open('../machine_learning/data/Y_test.pkl', 'rb'))
-Y_train = load(open('../machine_learning/data/Y_train.pkl', 'rb'))
-
-
-
 class SVM_class:
 
     def __init__(self,learner="SVC",scaler="ST",confusion_matrix=True, classification_report=True,minimal_grid_search=True, k_fold=2,verbose=0):
@@ -69,15 +62,15 @@ class SVM_class:
         self.confusion_matrix=True
 
     def train(self):
-        print("SVM TRAINING STARTED")
         clf=self.clf
         scaler=self.scaler
         minimal_grid_search=self.minimal_grid_search
 
-        X_train = load(open('../machine_learning/data/X_train.pkl', 'rb'))
-        X_test = load(open('../machine_learning/data/X_test.pkl', 'rb'))
-        Y_test = load(open('../machine_learning/data/Y_test.pkl', 'rb'))
-        Y_train = load(open('../machine_learning/data/Y_train.pkl', 'rb'))
+        # relative path
+        X_train = load(open('../processed_data/X_train.pkl', 'rb'))
+        X_test = load(open('../processed_data/X_test.pkl', 'rb'))
+        Y_test = load(open('../processed_data/Y_test.pkl', 'rb'))
+        Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
 
 
         # Transforming Data
@@ -85,8 +78,10 @@ class SVM_class:
         # https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
         X_train = scaler.fit_transform(X_train)
         X_test = scaler.transform(X_test)
-        dump(scaler, open("../machine_learning/data/SVM_fit_transformed.pkl", "wb"))
-        dump(X_test, open("../machine_learning/data/X_test.pkl", "wb"))
+
+        # relative path
+        dump(scaler, open("../processed_data/SVM_fit_transformed.pkl", "wb"))
+        dump(X_test, open("../processed_data/X_test.pkl", "wb"))
 
         # training
         # Learn the digits on the train subset
@@ -124,7 +119,8 @@ class SVM_class:
     ######################################################################
 
         # save the best parameters of the gridsearch
-        dump(grid.best_estimator_, "../machine_learning/best_estimators/SVM_BEST.joblib")
+        # relative path
+        dump(grid.best_estimator_, "../best_estimators/SVM_BEST.joblib")
         print ("parameters saved in best_estimators/SVM_BEST.joblib ")
         print("Grid best estimator:")
         print(grid.best_estimator_)
@@ -148,7 +144,7 @@ class SVM_class:
             disp.figure_.suptitle("Confusion Matrix - SVM")
             #print(f"Confusion matrix:\n{disp.confusion_matrix}")
             #plt.plot(disp)
-            plt.savefig('plots/confusion_matrices/cm_svm.jpg')
+            plt.savefig('../plots/confusion_matrices/cm_svm.jpg')
 
            
 

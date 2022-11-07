@@ -20,7 +20,7 @@ import base64
 from machine_learning.data_prep import data_prep
 from joblib import dump, load
 import numpy as np
-from machine_learning.user_processing import user_processing
+from machine_learning.scripts.user_processing import user_processing
 
 
 

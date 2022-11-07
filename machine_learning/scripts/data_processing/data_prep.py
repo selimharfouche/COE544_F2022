@@ -16,9 +16,11 @@ import os
 import cv2, glob, os, random
 from sklearn import preprocessing
 from sklearn.model_selection import *
-from machine_learning.helper_data_prep import *
 from pickle import dump
 from sklearn import preprocessing
+
+#relative import
+from data_processing.helper_data_prep import *
 
 
 class data_prep:
@@ -26,7 +28,8 @@ class data_prep:
         self,
         microsoft_windows=False,
         test_size=0.3,
-        directory_training_data="../machine_learning/datasets/A",
+        #relative path
+        directory_training_data="../datasets/A",
         numerical=False,
         alphabetical=False,
         lower_case=False,
@@ -54,23 +57,24 @@ class data_prep:
         self.data = []
 
         # selecting characters to train on
+        # relative import
         if numerical:
-            from machine_learning.characters_categories import numerical_category
+            from data_processing.characters_categories import numerical_category
             self.categories = numerical_category
                 
         elif alphabetical:
-            from machine_learning.characters_categories import alphabetical_category
+            from data_processing.characters_categories import alphabetical_category
             self.categories = alphabetical_category
         elif lower_case:
-            from machine_learning.characters_categories import lower_case_category
+            from data_processing.characters_categories import lower_case_category
             self.categories = lower_case_category
 
         elif upper_case:
-            from machine_learning.characters_categories import upper_case_category
+            from data_processing.characters_categories import upper_case_category
             self.categories = upper_case_category
            
         else:  # by default, alphanumerical
-            from machine_learning.characters_categories import alphanumerical_category
+            from data_processing.characters_categories import alphanumerical_category
             self.categories = alphanumerical_category
 
         if all_features:
@@ -105,7 +109,8 @@ class data_prep:
 
     def prep_data(self):
         if self.uploaded:
-            img0 = cv2.imread("../machine_learning/datasets/uploaded_images/website_upload.png")
+            # relative path
+            img0 = cv2.imread("../datasets/uploaded_images/website_upload.png")
             # print("image read success")
             self.label="+"
             # convert to black and white and identify contours
@@ -122,9 +127,8 @@ class data_prep:
                 features.append(features1)
                 labels.append(label)
             X_test=features
-            # print("Xtest")
-            # print(X_test)
-            dump(X_test, open("../machine_learning/data/X_test_uploaded.pkl", "wb"))
+            #relative path
+            dump(X_test, open("../processed_data/X_test_uploaded.pkl", "wb"))
         else:
             for category in self.mapping_labels.keys():
                 path = os.path.join(self.directory_training_data, category)
@@ -248,7 +252,8 @@ class data_prep:
         # print("length of X_test")
         # print(len(X_test[0]))
 
-        dump(X_train, open("../machine_learning/data/X_train.pkl", "wb"))
-        dump(X_test, open("../machine_learning/data/X_test.pkl", "wb"))
-        dump(Y_test, open("../machine_learning/data/Y_test.pkl", "wb"))
-        dump(Y_train, open("../machine_learning/data/Y_train.pkl", "wb"))
+        # relative path
+        dump(X_train, open("../processed_data/X_train.pkl", "wb"))
+        dump(X_test, open("../processed_data/X_test.pkl", "wb"))
+        dump(Y_test, open("../processed_data/Y_test.pkl", "wb"))
+        dump(Y_train, open("../processed_data/Y_train.pkl", "wb"))

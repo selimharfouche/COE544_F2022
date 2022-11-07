@@ -11,13 +11,14 @@ class voting_classifier_class():
         self.voting=voting
 
     def train(self):
-        X_train = load(open('data/X_train.pkl', 'rb'))
-        X_test = load(open('data/X_test.pkl', 'rb'))
-        Y_test = load(open('data/Y_test.pkl', 'rb'))
-        Y_train = load(open('data/Y_train.pkl', 'rb'))
+        # relative path
+        X_train = load(open('../processed_data/X_train.pkl', 'rb'))
+        X_test = load(open('../processed_data/X_test.pkl', 'rb'))
+        Y_test = load(open('../processed_data/Y_test.pkl', 'rb'))
+        Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
 
-        svm_best = load("best_estimators/SVM_BEST.joblib")
-        knn_best = load("best_estimators/KNN_BEST.joblib")
+        svm_best = load("../best_estimators/SVM_BEST.joblib")
+        knn_best = load("../best_estimators/KNN_BEST.joblib")
 
         estimators=[("knn", knn_best), ("svm", svm_best)]#create our voting classifier, inputting our models
 
@@ -25,7 +26,7 @@ class voting_classifier_class():
         
         #fit model to training data
         ensemble.fit(X_train, Y_train)#test our model on the test data
-        dump(ensemble, "best_estimators/ENSEMBLE.joblib")
+        dump(ensemble, "../best_estimators/ENSEMBLE.joblib")
         
         #print(ensemble.score(X_test, Y_test))
 

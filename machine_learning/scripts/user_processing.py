@@ -13,10 +13,11 @@ except ValueError: # Already removed
 ##################### Path configuration end #####################
 
 
-from machine_learning.data_prep import data_prep
 from joblib import load
 import numpy as np
 
+# relative import
+from data_processing.data_prep import data_prep
 class user_processing:
     def __init__(self,learner=""):
         self.learner = learner
@@ -35,15 +36,17 @@ class user_processing:
 
 
     def give_label(self):
+        # relative path
+        X_test = load(open('../processed_data/X_test_uploaded.pkl', 'rb'))
 
         if self.learner=="SVM":
-            print("SVM IS SELECTED")
-            from machine_learning.svm_learner import SVM_class
+            # relative import
+            from learners.svm_learner import SVM_class
             svm = SVM_class(minimal_grid_search=False,scaler="te")
             svm.train()
-            estimator = load("../machine_learning/best_estimators/SVM_BEST.joblib")
-            X_test = load(open('../machine_learning/data/X_test_uploaded.pkl', 'rb'))
-            sc = load(open("../machine_learning/data/SVM_fit_transformed.pkl", "rb"))
+            # relative path
+            estimator = load("../best_estimators/SVM_BEST.joblib")
+            sc = load(open("../processed_data/SVM_fit_transformed.pkl", "rb"))
 
             #transformation for svm
             X_test = sc.transform(X_test)
@@ -56,12 +59,13 @@ class user_processing:
             
         
         if self.learner=="KNN":
-            from machine_learning.knn_learner import KNN_class
+            # relative import
+            from learners.knn_learner import KNN_class
             knn = KNN_class(scaler="te")
             knn.train()
-            estimator = load("../machine_learning/best_estimators/KNN_BEST.joblib")
-            X_test = load(open('../machine_learning/data/X_test_uploaded.pkl', 'rb'))
-            sc = load(open("../machine_learning/data/KNN_fit_transformed.pkl", "rb"))
+            # relative path
+            estimator = load("../best_estimators/KNN_BEST.joblib")
+            sc = load(open("../processed_data/KNN_fit_transformed.pkl", "rb"))
 
             #transformation for knn
             X_test = sc.transform(X_test)
@@ -73,11 +77,12 @@ class user_processing:
             return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
         
         if self.learner=="ensemble":
-            from machine_learning.voting_classifier import voting_classifier_class
+            # relative import
+            from learners.voting_classifier import voting_classifier_class
             ensemble=voting_classifier_class()
             ensemble.train()
-            estimator = load("../machine_learning/best_estimators/ENSEMBLE.joblib")
-            X_test = load(open('../machine_learning/data/X_test_uploaded.pkl', 'rb'))
+            # relative path
+            estimator = load("../best_estimators/ENSEMBLE.joblib")
             print("ensemble expected label")
             print(estimator.predict(X_test))
             print("ensemble probability")
