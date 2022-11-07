@@ -7,7 +7,7 @@ from joblib import load, dump
 
 
 class voting_classifier_class():
-    def __init__(self,voting="hard"):
+    def __init__(self,voting="soft"):
         self.voting=voting
 
     def train(self):
