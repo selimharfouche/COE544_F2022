@@ -36,13 +36,14 @@ from joblib import load, dump
 class SVM_class:
 
     def __init__(self,learner="SVC",scaler="ST",confusion_matrix=True, classification_report=True,minimal_grid_search=True, k_fold=2,verbose=0):
+        self.learner = learner
         if learner=="SVC":
             # https://scikit-learn.org/stable/modules/svm.html#scores-probabilities
             self.clf = svm.SVC(probability=True)
             
         elif learner=="NuSVC":
             self.clf = svm.NuSVC(probability=True)
-        else:
+        elif learner=="linearSVC":
             self.clf = svm.LinearSVC(probability=True)
 
 
@@ -119,10 +120,18 @@ class SVM_class:
             Kernels = ['rbf', 'poly', 'sigmoid', 'linear']
 
         # parameter grid using the range defined just above
-        param_grid = {'C': Cs, 
-                    'gamma': Gammas,
-                    'kernel': Kernels} 
-                    
+        if self.learner=="SVC":
+            param_grid = {'C': Cs, 
+                        'gamma': Gammas,
+                        'kernel': Kernels} 
+        if self.learner=="NuSVC":
+            param_grid = {'nu': [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9], 
+                        'gamma': Gammas,
+                        'kernel': Kernels} 
+        if self.learner=="linearSVC":
+            param_grid = {'C': Cs}
+
+
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
         grid = GridSearchCV(clf, param_grid, refit = True, cv = self.cv,return_train_score=True, verbose = self.verbose)
         
