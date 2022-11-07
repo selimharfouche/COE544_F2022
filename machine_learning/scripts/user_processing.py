@@ -116,17 +116,13 @@ class user_processing:
             return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
 
         if self.learner=="pre_trained":
-            print("SELECTED PRETRAINEd")
             try:
                 estimator = load("../best_estimators/pre_trained_model/svm_model1.sav")
                 sc = load(open("../best_estimators/pre_trained_model/std_scaler.bin", "rb"))
             except:
                 estimator = load("../machine_learning/best_estimators/pre_trained_model/svm_model1.sav")
                 sc = load(open("../machine_learning/best_estimators/pre_trained_model/std_scaler.bin", "rb"))
-            print("SELECTED PRETRAINEd")
 
-
-            
             X_test = sc.transform(X_test)
             print ("pre_trained expected label")
             print(estimator.predict(X_test))

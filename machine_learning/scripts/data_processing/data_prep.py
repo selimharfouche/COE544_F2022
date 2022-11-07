@@ -235,7 +235,6 @@ class data_prep:
                 features = np.append(features, myFuncs[feature](cropped_image))
             except:
                 try:
-                    print(feature)
                     features = np.append(
                         features, myFuncs[feature](cropped_image).flatten()
                     )
