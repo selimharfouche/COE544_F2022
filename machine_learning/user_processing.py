@@ -1,3 +1,4 @@
+##################### Path configuration start #####################
 import sys
 from pathlib import Path # if you haven't already done so
 file = Path(__file__).resolve()
@@ -9,6 +10,9 @@ try:
     sys.path.remove(str(parent))
 except ValueError: # Already removed
     pass
+##################### Path configuration end #####################
+
+
 from machine_learning.data_prep import data_prep
 from joblib import load
 import numpy as np
@@ -35,7 +39,7 @@ class user_processing:
         if self.learner=="SVM":
             print("SVM IS SELECTED")
             from machine_learning.svm_learner import SVM_class
-            svm = SVM_class(confusion_matrix=False,minimal_grid_search=False,scaler="te")
+            svm = SVM_class(minimal_grid_search=False,scaler="te")
             svm.train()
             estimator = load("../machine_learning/best_estimators/SVM_BEST.joblib")
             X_test = load(open('../machine_learning/data/X_test_uploaded.pkl', 'rb'))
@@ -44,9 +48,9 @@ class user_processing:
             #transformation for svm
             X_test = sc.transform(X_test)
 
-            print ("expected label")
+            print ("SVM expected label")
             print(estimator.predict(X_test))
-            print("probability")
+            print("SVM probability")
             print(np.max(estimator.predict_proba(X_test)))
             return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
             
@@ -62,9 +66,9 @@ class user_processing:
             #transformation for knn
             X_test = sc.transform(X_test)
 
-            print ("expected label")
+            print ("KNN expected label")
             print(estimator.predict(X_test))
-            print("probability")
+            print("KNN probability")
             print(np.max(estimator.predict_proba(X_test)))
             return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
         
@@ -74,7 +78,11 @@ class user_processing:
             ensemble.train()
             estimator = load("../machine_learning/best_estimators/ENSEMBLE.joblib")
             X_test = load(open('../machine_learning/data/X_test_uploaded.pkl', 'rb'))
+            print("ensemble expected label")
             print(estimator.predict(X_test))
+            print("ensemble probability")
+            print(np.max(estimator.predict_proba(X_test)))
+
             return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
 
 
