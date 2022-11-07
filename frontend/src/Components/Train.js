@@ -145,9 +145,9 @@ function Train() {
                     <Radio.Group>
                         <Row><Radio value="SVM">SVM</Radio></Row>
                         <Row><Radio value="KNN">KNN</Radio></Row>
-                        <Row><Radio value="rfc">RFC</Radio></Row>
-                        <Row><Radio value="dt">DT</Radio></Row>
                         <Row><Radio value="ensemble">Ensemble</Radio></Row>
+                        <Row><Radio value="ensemble">PreTrained</Radio></Row>
+                        
                     </Radio.Group>
                 </Form.Item>
 
