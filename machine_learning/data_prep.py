@@ -1,3 +1,4 @@
+##################### Path configuration start #####################
 import sys
 from pathlib import Path # if you haven't already done so
 file = Path(__file__).resolve()
@@ -9,13 +10,13 @@ try:
     sys.path.remove(str(parent))
 except ValueError: # Already removed
     pass
-    
+##################### Path configuration end #####################    
 
 import os
 import cv2, glob, os, random
 from sklearn import preprocessing
 from sklearn.model_selection import *
-from machine_learning.A_helper_data_prep import *
+from machine_learning.helper_data_prep import *
 from pickle import dump
 from sklearn import preprocessing
 

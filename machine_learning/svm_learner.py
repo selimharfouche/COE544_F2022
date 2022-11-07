@@ -15,9 +15,6 @@ from sklearn import svm, metrics
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler, SplineTransformer
 from sklearn.model_selection import GridSearchCV
-from joblib import load
-import joblib as jl
-import pickle
 import matplotlib.pyplot as plt
 from joblib import load, dump
 

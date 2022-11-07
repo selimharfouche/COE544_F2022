@@ -34,7 +34,7 @@ class user_processing:
 
         if self.learner=="SVM":
             print("SVM IS SELECTED")
-            from machine_learning.A_learner_svm import SVM_class
+            from machine_learning.svm_learner import SVM_class
             svm = SVM_class(confusion_matrix=False,minimal_grid_search=False,scaler="te")
             svm.train()
             estimator = load("../machine_learning/best_estimators/SVM_BEST.joblib")
@@ -52,7 +52,7 @@ class user_processing:
             
         
         if self.learner=="KNN":
-            from machine_learning.A_learner_knn import KNN_class
+            from machine_learning.knn_learner import KNN_class
             knn = KNN_class(scaler="te")
             knn.train()
             estimator = load("../machine_learning/best_estimators/KNN_BEST.joblib")
@@ -69,7 +69,7 @@ class user_processing:
             return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
         
         if self.learner=="ensemble":
-            from machine_learning.A_learner_voting_classifier import voting_classifier_class
+            from machine_learning.voting_classifier import voting_classifier_class
             ensemble=voting_classifier_class()
             ensemble.train()
             estimator = load("../machine_learning/best_estimators/ENSEMBLE.joblib")

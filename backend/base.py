@@ -1,3 +1,4 @@
+##################### Path configuration start #####################
 import sys
 from pathlib import Path # if you haven't already done so
 file = Path(__file__).resolve()
@@ -9,27 +10,24 @@ try:
     sys.path.remove(str(parent))
 except ValueError: # Already removed
     pass
-from flask import *
+##################### Path configuration end #####################
+
+from flask import Flask, request, redirect
 from flask_cors import CORS
 import os
 import ast
-image_path= '../machine_learning/datasets/uploaded_images/'
-path_dir= 'images'
 import base64
 from machine_learning.data_prep import data_prep
-
 from joblib import dump, load
-
-
 import numpy as np
-
-
 from machine_learning.user_processing import user_processing
 
 
 
 api = Flask(__name__)
 CORS(api)
+image_path= '../machine_learning/datasets/uploaded_images/'
+path_dir= 'images'
 
 # save image 
 @api.route('/save-image',methods=['GET', 'POST'])
@@ -39,7 +37,7 @@ def my_profile():
     uploaded_file.filename = 'website_upload.png'
 
     uploaded_file.save(os.path.join(image_path, uploaded_file.filename))
-    return "Ff"
+    return redirect ('/train', code=200)
 
 # save drawn image 
 @api.route('/save-drawn-image',methods=['GET', 'POST'])
@@ -51,7 +49,7 @@ def drawn_Image():
     filename = image_path+"website_upload.png"  
     with open(filename, 'wb') as f:
         f.write(imgdata)
-    return api.route('/train')
+    return redirect ('/train', code=200)
 
 
 
