@@ -9,3 +9,4 @@ models/*.sav
 .vscode
 /venv
 /venv/
+extra_scripts/

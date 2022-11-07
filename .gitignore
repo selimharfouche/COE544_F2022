@@ -13,3 +13,5 @@ frontend/coverage/
 venv/
 backend/__pycache__
 machine_learning/archive_best_estimators/
+machine_learning/datasets/uploaded_images/*.png
+extra_scripts/
