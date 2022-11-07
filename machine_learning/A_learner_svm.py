@@ -21,10 +21,10 @@ import pickle
 import matplotlib.pyplot as plt
 from joblib import load, dump
 
-X_train = load(open('data/X_train.pkl', 'rb'))
-X_test = load(open('data/X_test.pkl', 'rb'))
-Y_test = load(open('data/Y_test.pkl', 'rb'))
-Y_train = load(open('data/Y_train.pkl', 'rb'))
+X_train = load(open('../machine_learning/data/X_train.pkl', 'rb'))
+X_test = load(open('../machine_learning/data/X_test.pkl', 'rb'))
+Y_test = load(open('../machine_learning/data/Y_test.pkl', 'rb'))
+Y_train = load(open('../machine_learning/data/Y_train.pkl', 'rb'))
 
 
 
@@ -61,10 +61,10 @@ class SVM_class:
         classification_report=self.classification_report
         minimal_grid_search=self.minimal_grid_search
 
-        X_train = load(open('data/X_train.pkl', 'rb'))
-        X_test = load(open('data/X_test.pkl', 'rb'))
-        Y_test = load(open('data/Y_test.pkl', 'rb'))
-        Y_train = load(open('data/Y_train.pkl', 'rb'))
+        X_train = load(open('../machine_learning/data/X_train.pkl', 'rb'))
+        X_test = load(open('../machine_learning/data/X_test.pkl', 'rb'))
+        Y_test = load(open('../machine_learning/data/Y_test.pkl', 'rb'))
+        Y_train = load(open('../machine_learning/data/Y_train.pkl', 'rb'))
 
 
         # Transforming Data
@@ -72,8 +72,8 @@ class SVM_class:
         # https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
         X_train = scaler.fit_transform(X_train)
         X_test = scaler.transform(X_test)
-        dump(scaler, open("data/SVM_fit_transformed.pkl", "wb"))
-        dump(X_test, open("data/X_test.pkl", "wb"))
+        dump(scaler, open("../machine_learning/data/SVM_fit_transformed.pkl", "wb"))
+        dump(X_test, open("../machine_learning/data/X_test.pkl", "wb"))
 
         # training
         # Learn the digits on the train subset
@@ -125,7 +125,7 @@ class SVM_class:
     ######################################################################
 
         # save the best parameters of the gridsearch
-        dump(grid.best_estimator_, "best_estimators/SVM_BEST.joblib")
+        dump(grid.best_estimator_, "../machine_learning/best_estimators/SVM_BEST.joblib")
         print ("parameters saved in best_estimators/SVM_BEST.joblib ")
         print("Grid best estimator:")
         print(grid.best_estimator_)

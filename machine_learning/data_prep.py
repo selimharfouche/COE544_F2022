@@ -1,7 +1,21 @@
+import sys
+from pathlib import Path # if you haven't already done so
+file = Path(__file__).resolve()
+parent, root = file.parent, file.parents[1]
+sys.path.append(str(root))
+
+# Additionally remove the current file's directory from sys.path
+try:
+    sys.path.remove(str(parent))
+except ValueError: # Already removed
+    pass
+    
+
+import os
 import cv2, glob, os, random
 from sklearn import preprocessing
 from sklearn.model_selection import *
-from A_helper_data_prep import *
+from machine_learning.A_helper_data_prep import *
 from pickle import dump
 from sklearn import preprocessing
 
@@ -11,7 +25,7 @@ class data_prep:
         self,
         microsoft_windows=False,
         test_size=0.3,
-        directory_training_data="datasets/A",
+        directory_training_data="../machine_learning/datasets/A",
         numerical=False,
         alphabetical=False,
         lower_case=False,
@@ -21,6 +35,7 @@ class data_prep:
         uploaded=False,
     ):
         self.uploaded=uploaded
+        print(os.getcwd())
 
         # setting the iteration parameter depending on the operating system
         if microsoft_windows:
@@ -39,22 +54,22 @@ class data_prep:
 
         # selecting characters to train on
         if numerical:
-            from characters_categories import numerical_category
+            from machine_learning.characters_categories import numerical_category
             self.categories = numerical_category
                 
         elif alphabetical:
-            from characters_categories import alphabetical_category
+            from machine_learning.characters_categories import alphabetical_category
             self.categories = alphabetical_category
         elif lower_case:
-            from characters_categories import lower_case_category
+            from machine_learning.characters_categories import lower_case_category
             self.categories = lower_case_category
 
         elif upper_case:
-            from characters_categories import upper_case_category
+            from machine_learning.characters_categories import upper_case_category
             self.categories = upper_case_category
            
         else:  # by default, alphanumerical
-            from characters_categories import alphanumerical_category
+            from machine_learning.characters_categories import alphanumerical_category
             self.categories = alphanumerical_category
 
         if all_features:
@@ -89,7 +104,7 @@ class data_prep:
 
     def prep_data(self):
         if self.uploaded:
-            img0 = cv2.imread("datasets/uploaded_images/website_upload.png")
+            img0 = cv2.imread("../machine_learning/datasets/uploaded_images/website_upload.png")
             # print("image read success")
             self.label="+"
             # convert to black and white and identify contours
@@ -108,7 +123,7 @@ class data_prep:
             X_test=features
             # print("Xtest")
             # print(X_test)
-            dump(X_test, open("data/X_test_uploaded.pkl", "wb"))
+            dump(X_test, open("../machine_learning/data/X_test_uploaded.pkl", "wb"))
         else:
             for category in self.mapping_labels.keys():
                 path = os.path.join(self.directory_training_data, category)
@@ -232,7 +247,7 @@ class data_prep:
         # print("length of X_test")
         # print(len(X_test[0]))
 
-        dump(X_train, open("data/X_train.pkl", "wb"))
-        dump(X_test, open("data/X_test.pkl", "wb"))
-        dump(Y_test, open("data/Y_test.pkl", "wb"))
-        dump(Y_train, open("data/Y_train.pkl", "wb"))
+        dump(X_train, open("../machine_learning/data/X_train.pkl", "wb"))
+        dump(X_test, open("../machine_learning/data/X_test.pkl", "wb"))
+        dump(Y_test, open("../machine_learning/data/Y_test.pkl", "wb"))
+        dump(Y_train, open("../machine_learning/data/Y_train.pkl", "wb"))

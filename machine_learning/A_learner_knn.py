@@ -12,10 +12,10 @@ class KNN_class():
 
     def train(self):
         scaler=self.scaler
-        X_train = load(open('data/X_train.pkl', 'rb'))
-        X_test = load(open('data/X_test.pkl', 'rb'))
-        Y_test = load(open('data/Y_test.pkl', 'rb'))
-        Y_train = load(open('data/Y_train.pkl', 'rb'))
+        X_train = load(open('../machine_learning/data/X_train.pkl', 'rb'))
+        X_test = load(open('../machine_learning/data/X_test.pkl', 'rb'))
+        Y_test = load(open('../machine_learning/data/Y_test.pkl', 'rb'))
+        Y_train = load(open('../machine_learning/data/Y_train.pkl', 'rb'))
 
         #Grid search best k-NN parameters
         parameters = {'n_neighbors':list(range(1, 20)) ,'weights': ['uniform', 'distance']}
@@ -38,14 +38,14 @@ class KNN_class():
         #we must apply the scaling to the test set that we computed for the training set
         X_test = scaler.transform(X_test)
         #Save fitted scaler model to be used with new images or else model will not predict well
-        dump(scaler, open("data/KNN_fit_transformed.pkl", "wb"))
+        dump(scaler, open("../machine_learning/data/KNN_fit_transformed.pkl", "wb"))
 
         # fit the grid search with training set
         grid.fit(X_train, Y_train)
 
         # retrieve the best estimator
         knn_best=grid.best_estimator_
-        dump(knn_best, "best_estimators/KNN_BEST.joblib")
+        dump(knn_best, "../machine_learning/best_estimators/KNN_BEST.joblib")
 
         print("Accuracy Score")
         print(accuracy_score(Y_test, knn_best.predict(X_test)))
