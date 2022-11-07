@@ -1,4 +1,4 @@
-import React from "react";
+import React , { useState } from "react";
 import { Button, Typography, Form, Upload } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -10,6 +10,7 @@ const { Title, Text } = Typography;
 function Upload_image() {
 
   const [selectedFile, setSelectedFile] = React.useState(null);
+  const [axiosResponse, getAxiosResponse] = useState();
 
   const handleSubmit = async event => {
     event.preventDefault()
@@ -21,7 +22,14 @@ function Upload_image() {
         url: "http://127.0.0.1:5000/save-image",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
-      });
+      }).then(response =>{ 
+        alert("FFFFFFFFFFF")
+        getAxiosResponse(response.status);
+        if (response.status==201) {
+          window.location =('/train')
+        }
+        console.log(response);
+     });
     } catch(error) {
       console.log(error)
     }

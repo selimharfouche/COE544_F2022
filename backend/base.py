@@ -38,9 +38,8 @@ def my_profile():
     uploaded_file = request.files["image"]
     print("images received")
     uploaded_file.filename = 'website_upload.png'
-
     uploaded_file.save(os.path.join(image_path, uploaded_file.filename))
-    return redirect ('/train', code=200)
+    return "uploaded image saved" ,201
 
 # save drawn image 
 @api.route('/save-drawn-image',methods=['GET', 'POST'])
@@ -52,8 +51,7 @@ def drawn_Image():
     filename = image_path+"website_upload.png"  
     with open(filename, 'wb') as f:
         f.write(imgdata)
-    return "goog" ,201
-
+    return "drawn image saved" ,201
 
 
 
@@ -85,17 +83,14 @@ def train():
 @api.route('/get-label',methods=['GET', 'POST'])
 def test():
     training_algorithm = request.form["trainingAlgo"]
-
-
-    # print ("Training algorithm selected")
-    # print(training_algorithm)
-
-
+    print ("Training algorithm selected")
+    print(training_algorithm)
     features = request.form["features"]
     res = features.strip('][').split(',')
     print("features selected")
     print(res)
-    user_processing.prepare_data(features=res)
-    up= user_processing(learner=training_algorithm) 
-    return str(up.give_label())
+    # user_processing.prepare_data(features=res)
+    # up= user_processing(learner=training_algorithm) 
+    # return str(up.give_label())
+    return "DFFFFF"
 
