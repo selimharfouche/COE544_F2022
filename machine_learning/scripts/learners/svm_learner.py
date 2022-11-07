@@ -33,14 +33,6 @@ from joblib import load, dump
 
 
 
-# relative path
-X_train = load(open('../processed_data/X_train.pkl', 'rb'))
-X_test = load(open('../processed_data/X_test.pkl', 'rb'))
-Y_test = load(open('../processed_data/Y_test.pkl', 'rb'))
-Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
-
-
-
 class SVM_class:
 
     def __init__(self,learner="SVC",scaler="ST",confusion_matrix=True, classification_report=True,minimal_grid_search=True, k_fold=2,verbose=0):
@@ -74,10 +66,19 @@ class SVM_class:
         minimal_grid_search=self.minimal_grid_search
 
         # relative path
-        X_train = load(open('../processed_data/X_train.pkl', 'rb'))
-        X_test = load(open('../processed_data/X_test.pkl', 'rb'))
-        Y_test = load(open('../processed_data/Y_test.pkl', 'rb'))
-        Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
+        try:
+            X_train = load(open('../processed_data/X_train.pkl', 'rb'))
+            X_test = load(open('../processed_data/X_test.pkl', 'rb'))
+            Y_test = load(open('../processed_data/Y_test.pkl', 'rb'))
+            Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
+        except:
+            X_train = load(open('../machine_learning/processed_data/X_train.pkl', 'rb'))
+            X_test = load(open('../machine_learning/processed_data/X_test.pkl', 'rb'))
+            Y_test = load(open('../machine_learning/processed_data/Y_test.pkl', 'rb'))
+            Y_train = load(open('../machine_learning/processed_data/Y_train.pkl', 'rb'))
+
+
+    
 
 
         # Transforming Data
@@ -87,8 +88,13 @@ class SVM_class:
         X_test = scaler.transform(X_test)
 
         # relative path
-        dump(scaler, open("../processed_data/SVM_fit_transformed.pkl", "wb"))
-        dump(X_test, open("../processed_data/X_test_transformed_svm.pkl", "wb"))
+        try:
+            dump(scaler, open("../processed_data/SVM_fit_transformed.pkl", "wb"))
+            dump(X_test, open("../processed_data/X_test_transformed_svm.pkl", "wb"))
+        except:
+            dump(scaler, open("../machine_learning/processed_data/SVM_fit_transformed.pkl", "wb"))
+            dump(X_test, open("../machine_learning/processed_data/X_test_transformed_svm.pkl", "wb"))
+            
 
         # training
         # Learn the digits on the train subset
@@ -127,7 +133,11 @@ class SVM_class:
 
         # save the best parameters of the gridsearch
         # relative path
-        dump(grid.best_estimator_, "../best_estimators/SVM_BEST.joblib")
+        try:
+            dump(grid.best_estimator_, "../best_estimators/SVM_BEST.joblib")
+        except:
+            dump(grid.best_estimator_, "../machine_learning/best_estimators/SVM_BEST.joblib")
+            
         print ("parameters saved in best_estimators/SVM_BEST.joblib ")
         print("Grid best estimator:")
         print(grid.best_estimator_)

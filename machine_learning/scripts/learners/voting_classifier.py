@@ -12,11 +12,19 @@ class voting_classifier_class():
 
     def train(self):
         # relative path
-        X_train = load(open('../processed_data/X_train.pkl', 'rb'))
-        Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
+        try:
+            
+            X_train = load(open('../processed_data/X_train.pkl', 'rb'))
+            Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
+            svm_best = load("../best_estimators/SVM_BEST.joblib")
+            knn_best = load("../best_estimators/KNN_BEST.joblib")
+        except:
+            
+            X_train = load(open('../machine_learning/processed_data/X_train.pkl', 'rb'))
+            Y_train = load(open('../machine_learning/processed_data/Y_train.pkl', 'rb'))
+            svm_best = load("../machine_learning/best_estimators/SVM_BEST.joblib")
+            knn_best = load("../machine_learning/best_estimators/KNN_BEST.joblib")
 
-        svm_best = load("../best_estimators/SVM_BEST.joblib")
-        knn_best = load("../best_estimators/KNN_BEST.joblib")
 
         estimators=[("knn", knn_best), ("svm", svm_best)]#create our voting classifier, inputting our models
 
@@ -24,7 +32,13 @@ class voting_classifier_class():
         
         #fit model to training data
         ensemble.fit(X_train, Y_train)#test our model on the test data
-        dump(ensemble, "../best_estimators/ENSEMBLE.joblib")
+
+        # relative path
+        try:
+            dump(ensemble, "../best_estimators/ENSEMBLE.joblib")
+        except:
+            dump(ensemble, "../machine_learning/best_estimators/ENSEMBLE.joblib")
+            
         
         #print(ensemble.score(X_test, Y_test))
 

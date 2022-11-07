@@ -12,23 +12,28 @@ except ValueError: # Already removed
     pass
 ##################### Path configuration end #####################
 
-from machine_learning.data_prep import data_prep
 
-from joblib import dump, load
+import os
+
+path="../machine_learning/processed_data/X_test_uploaded.pkl"
+print(os.path.exists(path))
+# from machine_learning.data_prep import data_prep
+
+# from joblib import dump, load
 
 
-import numpy as np
+# import numpy as np
 
 
-from machine_learning.scripts.user_processing import user_processing
+# from machine_learning.scripts.user_processing import user_processing
 
-print("SSSSSSS")
-user_processing.prepare_data(features=["pixel_intensity","histogram"])
-print("SSSSSSS")
-up= user_processing(learner="KNN")
-print("ZZZZZZZZ")
-up.give_label()
+# print("SSSSSSS")
+# user_processing.prepare_data(features=["pixel_intensity","histogram"])
+# print("SSSSSSS")
+# up= user_processing(learner="KNN")
+# print("ZZZZZZZZ")
+# up.give_label()
 
-print("YYYYYYY")
+# print("YYYYYYY")
 
 

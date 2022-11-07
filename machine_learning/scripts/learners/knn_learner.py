@@ -15,11 +15,18 @@ class KNN_class():
 
     def train(self):
         scaler=self.scaler
+
         # relative path
-        X_train = load(open('../processed_data/X_train.pkl', 'rb'))
-        X_test = load(open('../processed_data/X_test.pkl', 'rb'))
-        Y_test = load(open('../processed_data/Y_test.pkl', 'rb'))
-        Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
+        try:
+            X_train = load(open('../processed_data/X_train.pkl', 'rb'))
+            X_test = load(open('../processed_data/X_test.pkl', 'rb'))
+            Y_test = load(open('../processed_data/Y_test.pkl', 'rb'))
+            Y_train = load(open('../processed_data/Y_train.pkl', 'rb'))
+        except:
+            X_train = load(open('../machine_learning/processed_data/X_train.pkl', 'rb'))
+            X_test = load(open('../machine_learning/processed_data/X_test.pkl', 'rb'))
+            Y_test = load(open('../machine_learning/processed_data/Y_test.pkl', 'rb'))
+            Y_train = load(open('../machine_learning/processed_data/Y_train.pkl', 'rb'))
 
         #Grid search 
         parameters = {'n_neighbors':list(range(1, 20)) ,'weights': ['uniform', 'distance']}
@@ -40,16 +47,24 @@ class KNN_class():
 
         #Save fitted scaler model to be used with new images or else model will not predict well
         # relative path
-        dump(scaler, open("../processed_data/KNN_fit_transformed.pkl", "wb"))
-        dump(X_test, open("../processed_data/X_test_transformed_knn.pkl", "wb"))
+        try:
+            dump(scaler, open("../processed_data/KNN_fit_transformed.pkl", "wb"))
+            dump(X_test, open("../processed_data/X_test_transformed_knn.pkl", "wb"))
+        except:
+            dump(scaler, open("../machine_learning/processed_data/KNN_fit_transformed.pkl", "wb"))
+            dump(X_test, open("../machine_learning/processed_data/X_test_transformed_knn.pkl", "wb"))
 
 
         grid_search_knn.fit(X_train, Y_train)
 
         # retrieve the best estimator
         knn_best=grid_search_knn.best_estimator_
+
         # relative path
-        dump(knn_best, "../best_estimators/KNN_BEST.joblib")
+        try:
+            dump(knn_best, "../best_estimators/KNN_BEST.joblib")
+        except:
+            dump(knn_best, "../machine_learning/best_estimators/KNN_BEST.joblib")
 
         print("Accuracy Score KNN")
         print(accuracy_score(Y_test, knn_best.predict(X_test)))

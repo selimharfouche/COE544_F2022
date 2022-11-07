@@ -1,5 +1,5 @@
 ##################### Path configuration start #####################
-import sys
+import sys, os
 from pathlib import Path # if you haven't already done so
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
@@ -10,9 +10,17 @@ try:
     sys.path.remove(str(parent))
 except ValueError: # Already removed
     pass
+def path_corrector(path):
+    if not os.path.isdir(path):
+        path ='/machine_learning'+str(path)
+        path=path.replace(".", "")
+        path=".."+path
+        print("NEW PATH")
+    return path
 ##################### Path configuration end #####################
 
-import os
+
+
 import cv2, glob, os, random
 from sklearn import preprocessing
 from sklearn.model_selection import *
@@ -30,6 +38,8 @@ class data_prep:
         test_size=0.3,
         #relative path
         directory_training_data="../datasets/A",
+        directory_processed_data="../processed_data/",
+        directory_uploaded_image="../datasets/uploaded_images/",
         numerical=False,
         alphabetical=False,
         lower_case=False,
@@ -51,7 +61,9 @@ class data_prep:
         self.test_size = test_size
 
         # directory containing the training data
-        self.directory_training_data = directory_training_data
+        self.directory_training_data = path_corrector(directory_training_data)
+        
+
 
         # list of feature, label
         self.data = []
@@ -106,11 +118,16 @@ class data_prep:
         le.fit_transform(self.categories)
         self.mapping_labels = dict(zip(le.classes_, range(len(le.classes_))))
         self.label = None
+        self.directory_processed_data=path_corrector(directory_processed_data)
+        self.directory_uploaded_image=path_corrector(directory_uploaded_image)
+        
+
+        
 
     def prep_data(self):
         if self.uploaded:
             # relative path
-            img0 = cv2.imread("../datasets/uploaded_images/website_upload.png")
+            img0 = cv2.imread(self.directory_uploaded_image+"website_upload.png")
             # print("image read success")
             self.label="+"
             # convert to black and white and identify contours
@@ -128,11 +145,13 @@ class data_prep:
                 labels.append(label)
             X_test=features
             #relative path
-            dump(X_test, open("../processed_data/X_test_uploaded.pkl", "wb"))
+            dump(X_test, open(self.directory_processed_data+"X_test_uploaded.pkl", "wb"))
         else:
+            
             for category in self.mapping_labels.keys():
                 path = os.path.join(self.directory_training_data, category)
 
+   
                 # setting label to be examined
                 self.label = self.mapping_labels[category]
 
@@ -253,7 +272,8 @@ class data_prep:
         # print(len(X_test[0]))
 
         # relative path
-        dump(X_train, open("../processed_data/X_train.pkl", "wb"))
-        dump(X_test, open("../processed_data/X_test.pkl", "wb"))
-        dump(Y_test, open("../processed_data/Y_test.pkl", "wb"))
-        dump(Y_train, open("../processed_data/Y_train.pkl", "wb"))
+        
+        dump(X_train, open(self.directory_processed_data+"X_train.pkl", "wb"))
+        dump(X_test, open(self.directory_processed_data+"X_test.pkl", "wb"))
+        dump(Y_test, open(self.directory_processed_data+"Y_test.pkl", "wb"))
+        dump(Y_train, open(self.directory_processed_data+"Y_train.pkl", "wb"))
