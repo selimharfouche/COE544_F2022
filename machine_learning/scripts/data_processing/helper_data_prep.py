@@ -1,5 +1,8 @@
 # Helpers
 # Helper #1: takes as input two bounding rectangles and returns them merged
+
+
+from skimage.transform import resize
 import cv2
 import numpy as np
 def union(a, b):
@@ -226,7 +229,7 @@ def HOG(cropped_image):
     cv2.imwrite(("test.png"), thresh)
 
     # resizing image
-    resized_img = resize(thresh, (8 * 4, 8 * 4))
+    # resized_img = resize(thresh, (8 * 4, 8 * 4))
 
     # creating hog features
     fd, hog_image = hog(cropped_image, orientations=9, pixels_per_cell=(8, 8),

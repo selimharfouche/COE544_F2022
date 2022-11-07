@@ -107,12 +107,13 @@ class data_prep:
         else:
             self.selected_features=features_array
 
-        # print("features to be used:")
-        # for feature in self.selected_features:
-        #     print(feature)
+        print("features to be used:")
+        for feature in self.selected_features:
+             print(feature)
 
         # Counter for total number of images
         self.counter = 0
+
         # Added LabelEncoder (encodes class labels into integers)
         le = preprocessing.LabelEncoder()
         le.fit_transform(self.categories)

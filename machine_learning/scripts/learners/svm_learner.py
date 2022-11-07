@@ -35,7 +35,7 @@ from joblib import load, dump
 
 class SVM_class:
 
-    def __init__(self,learner="SVC",scaler="ST",confusion_matrix=True, classification_report=True,minimal_grid_search=True, k_fold=2,verbose=0):
+    def __init__(self,learner="SVC",scaler="ST",confusion_matrix=True, classification_report=True,minimal_grid_search=True, k_fold=2,verbose=10):
         self.learner = learner
         if learner=="SVC":
             # https://scikit-learn.org/stable/modules/svm.html#scores-probabilities
@@ -43,8 +43,9 @@ class SVM_class:
             
         elif learner=="NuSVC":
             self.clf = svm.NuSVC(probability=True)
-        elif learner=="linearSVC":
-            self.clf = svm.LinearSVC(probability=True)
+        # linear SVc    
+        # elif learner=="linearSVC":
+        #     self.clf = svm.LinearSVC()
 
 
         # preprocessings
@@ -82,9 +83,9 @@ class SVM_class:
     
 
 
-        # Transforming Data
-        # Compute knot positions of splines.
-        # https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
+        # ## Transforming Data
+        # ## Compute knot positions of splines.
+        # ## https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
         X_train = scaler.fit_transform(X_train)
         X_test = scaler.transform(X_test)
 
@@ -97,14 +98,14 @@ class SVM_class:
             dump(X_test, open("../machine_learning/processed_data/X_test_transformed_svm.pkl", "wb"))
             
 
-        # training
-        # Learn the digits on the train subset
-        # https://datascience.stackexchange.com/questions/87361/when-should-i-use-fitx-train-and-when-should-i-fit-x-train-y-train
-        clf.fit(X_train, Y_train)
+        # ## training
+        # ## Learn the digits on the train subset
+        # ## https://datascience.stackexchange.com/questions/87361/when-should-i-use-fitx-train-and-when-should-i-fit-x-train-y-train
+        # clf.fit(X_train, Y_train)
 
-        # Predict the value of the digit on the test subset
-        # https://stackoverflow.com/questions/62646058/how-does-the-predict-method-work-on-scikit-learn
-        predicted = clf.predict(X_test)
+        # ## Predict the value of the digit on the test subset
+        # ## https://stackoverflow.com/questions/62646058/how-does-the-predict-method-work-on-scikit-learn
+        # predicted = clf.predict(X_test)
 
 
         # GridSearch CV
@@ -128,8 +129,10 @@ class SVM_class:
             param_grid = {'nu': [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9], 
                         'gamma': Gammas,
                         'kernel': Kernels} 
-        if self.learner=="linearSVC":
-            param_grid = {'C': Cs}
+
+        # linear SVC
+        # if self.learner=="linearSVC":
+        #     param_grid = {'C': Cs}
 
 
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
@@ -163,13 +166,19 @@ class SVM_class:
                 f"{metrics.classification_report(Y_test, predicted,zero_division=1)}\n"
             )
             
-       
-        if self.confusion_matrix:
-            disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
-            disp.figure_.suptitle("Confusion Matrix - SVM")
-            #print(f"Confusion matrix:\n{disp.confusion_matrix}")
-            #plt.plot(disp)
-            plt.savefig('../plots/confusion_matrices/cm_svm.jpg')
+        # GIVES ERROR WHEN RUNNING FROM WEBSITE    
+        # /opt/homebrew/lib/python3.9/site-packages/sklearn/metrics/_plot/confusion_matrix.py:129: UserWarning: Starting a Matplotlib GUI outside of the main thread will likely fail.
+        #   fig, ax = plt.subplots()
+        # 2022-11-08 00:07:50.403 Python[21568:353052] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'NSWindow drag regions should only be invalidated on the Main Thread!'
+        # if self.confusion_matrix:
+        #     try:
+        #         disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
+        #         disp.figure_.suptitle("Confusion Matrix - SVM")
+        #         #print(f"Confusion matrix:\n{disp.confusion_matrix}")
+        #         #plt.plot(disp)
+        #         plt.savefig('../plots/confusion_matrices/cm_svm.jpg')
+        #     except:
+        #         print("Starting a Matplotlib GUI outside of the main thread will likely fail.")
 
            
 

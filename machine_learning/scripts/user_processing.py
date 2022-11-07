@@ -54,7 +54,7 @@ class user_processing:
         if self.learner=="SVM":
             # relative import
             from learners.svm_learner import SVM_class
-            svm = SVM_class(minimal_grid_search=False,scaler="te")
+            svm = SVM_class(learner="SVC",minimal_grid_search=False,scaler="te")
             svm.train()
             # relative path
             try:
@@ -96,7 +96,13 @@ class user_processing:
             print(estimator.predict(X_test))
             print("KNN probability")
             print(np.max(estimator.predict_proba(X_test)))
-            return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
+            try:
+                return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
+            # therefore it is a linear SV
+            except:
+                return estimator.predict(X_test)
+
+
         
         if self.learner=="ensemble":
             # relative import

@@ -65,35 +65,55 @@ function Train() {
     
 
     var featureName=[
+ 
         {
             value:1,
-            label:"pixel_intensity"
+            label:"aspect_ratio"
             
         },
         {
             value:2,
-            label:"histogram"
+            label:"top_half_img"
         },
         {
             value:3,
-            label:"Projection Histogram"
+            label:"lower_half_img"
         },
         {
             value:4,
-            label:"Pixel Intensity"
+            label:"right_half_img"
         },
         {
             value:5,
-            label:"sobel_edge"
+            label:"left_half_img"
         },
         {
             value:6,
-            label:"Canny Edge"
+            label:"histogram"
         },
         {
             value:7,
-            label:"Local Binary Patterns"
+            label:"pixel_intensity"
         },
+        {
+            value:8,
+            label:"sobel_edge"
+        },
+        {
+            value:9,
+            label:"canny_edge"
+        },
+        {
+            value:10,
+            label:"LocalBinaryPatterns"
+        },
+        {
+            value:11,
+            label:"HOG"
+        },
+
+
+
 
     ]
     
