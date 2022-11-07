@@ -24,6 +24,7 @@ function Draw_image() {
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       }).then(response =>{ 
+        alert ("FFFFDMLGFAS")
         getAxiosResponse(response.status);
         if (response.status==201) {
           window.location =('/train')
