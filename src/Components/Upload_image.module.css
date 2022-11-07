@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 30vh;
+    overflow: auto;
+    
+  }
+
+  .header {
+    margin-bottom: 50px;
+}
+
+.text{
+    color: #8e202073;
+    font-size: medium;
+  }
+
+
+  .button{
+    margin-left: 40%;
+    width: 20%;
+    margin-top: 2%;
+    
+}
