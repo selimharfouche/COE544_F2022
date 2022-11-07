@@ -10,13 +10,29 @@
 # save the best model to best_estimators
 
 ############################################################
+##################### Path configuration start #####################
+import sys
+from pathlib import Path # if you haven't already done so
+file = Path(__file__).resolve()
+parent, root = file.parent, file.parents[1]
+sys.path.append(str(root))
+
+# Additionally remove the current file's directory from sys.path
+try:
+    sys.path.remove(str(parent))
+except ValueError: # Already removed
+    pass
+##################### Path configuration end #####################
+
 
 from sklearn import svm, metrics
-from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler, SplineTransformer
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 from joblib import load, dump
+
+
+
 
 X_train = load(open('../machine_learning/data/X_train.pkl', 'rb'))
 X_test = load(open('../machine_learning/data/X_test.pkl', 'rb'))
@@ -27,7 +43,7 @@ Y_train = load(open('../machine_learning/data/Y_train.pkl', 'rb'))
 
 class SVM_class:
 
-    def __init__(self,learner="SVC",scaler="ST",confusion_matrix=True,classification_report=True,minimal_grid_search=True, k_fold=2):
+    def __init__(self,learner="SVC",scaler="ST",confusion_matrix=True, classification_report=True,minimal_grid_search=True, k_fold=2,verbose=0):
         if learner=="SVC":
             # https://scikit-learn.org/stable/modules/svm.html#scores-probabilities
             self.clf = svm.SVC(probability=True)
@@ -45,17 +61,17 @@ class SVM_class:
         else:
             self.scaler = StandardScaler()
 
-        self.confusion_matrix=confusion_matrix
+        
         self.classification_report=classification_report
         self.minimal_grid_search=minimal_grid_search
         self.cv=k_fold
+        self.verbose=verbose
+        self.confusion_matrix=True
 
     def train(self):
         print("SVM TRAINING STARTED")
         clf=self.clf
         scaler=self.scaler
-        confusion_matrix=self.confusion_matrix
-        classification_report=self.classification_report
         minimal_grid_search=self.minimal_grid_search
 
         X_train = load(open('../machine_learning/data/X_train.pkl', 'rb'))
@@ -81,20 +97,6 @@ class SVM_class:
         # https://stackoverflow.com/questions/62646058/how-does-the-predict-method-work-on-scikit-learn
         predicted = clf.predict(X_test)
 
-   
-    ############################# PLOTTING ###############################
-   
-        if classification_report:
-            print(
-                f"Classification report for classifier {clf}:\n"
-                f"{metrics.classification_report(Y_test, predicted,zero_division=1)}\n"
-            )
-
-        if confusion_matrix:
-            disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
-            disp.figure_.suptitle("Confusion Matrix")
-            print(f"Confusion matrix:\n{disp.confusion_matrix}")
-            plt.show()
 
         # GridSearch CV
         # https://www.vebuso.com/2020/03/svm-hyperparameter-tuning-using-gridsearchcv/   
@@ -115,7 +117,7 @@ class SVM_class:
 
 
         # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
-        grid = GridSearchCV(clf, param_grid, refit = True, cv = self.cv,return_train_score=True, verbose = 10)
+        grid = GridSearchCV(clf, param_grid, refit = True, cv = self.cv,return_train_score=True, verbose = self.verbose)
         
         # fitting the model for grid search
         grid.fit(X_train, Y_train)
@@ -130,6 +132,26 @@ class SVM_class:
         print (grid.best_params_)
         print("Grid best score:")
         print (grid.best_score_)
+           
+    ############################# PLOTTING ###############################
+        predicted=grid.best_estimator_.predict(X_test)
+   
+        if self.classification_report:
+            print(
+                f"Classification report for classifier {clf}:\n"
+                f"{metrics.classification_report(Y_test, predicted,zero_division=1)}\n"
+            )
+            
+       
+        if self.confusion_matrix:
+            disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
+            disp.figure_.suptitle("Confusion Matrix - SVM")
+            #print(f"Confusion matrix:\n{disp.confusion_matrix}")
+            #plt.plot(disp)
+            plt.savefig('plots/confusion_matrices/cm_svm.jpg')
+
+           
+
 
         # prediction = grid.best_estimator_.predict(X_test)
         # print (classification_report(Y_test, prediction))
