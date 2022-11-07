@@ -10,7 +10,7 @@ try:
     sys.path.remove(str(parent))
 except ValueError: # Already removed
     pass
-##################### Path configuration end #####################    
+##################### Path configuration end #####################
 
 import os
 import cv2, glob, os, random
