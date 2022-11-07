@@ -1,9 +1,14 @@
-node_modules/
+frontend/node_modules/
 .cache/
+frontend/.cache
 dist/
+frontend/dist/
 .env
+frontend/.env
 .DS_Store
+frontend/.DS_Store
 coverage/
+frontend/coverage/
 .vscode/
 venv/
 backend/__pycache__
