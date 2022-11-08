@@ -23,7 +23,6 @@ function Upload_image() {
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
       }).then(response =>{ 
-        alert("FFFFFFFFFFF")
         getAxiosResponse(response.status);
         if (response.status==201) {
           window.location =('/train')

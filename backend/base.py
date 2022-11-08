@@ -89,7 +89,9 @@ def test():
     res = features.strip('][').split(',')
     print("features selected")
     print(res)
-    user_processing.prepare_data(features=res)
+    if training_algorithm!="PreTrained":
+        user_processing.prepare_data(features=res)
+        print("NOT PRETRAING")
     up= user_processing(learner=training_algorithm) 
     return str(up.give_label())
     
