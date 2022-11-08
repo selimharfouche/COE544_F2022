@@ -40,7 +40,7 @@ function Draw_image() {
   return (
     <div className={styles.container}>
       <div style={{ paddingBottom: '150px' }}>
-        <Title>Drawn any digit or character and try it with our AI!</Title>
+        <Title>Draw any digit or character and try it with our AI!</Title>
         <Text style={{ paddingLeft: '250px' }}> Feed the AI with your very own drawings</Text>
       </div>
 
@@ -51,6 +51,7 @@ function Draw_image() {
           backgroundColor="#fff"
           brushColor="#000"
           hideGrid={true}
+          style={{border:'1px solid black'}}
         />
       </div>
 
