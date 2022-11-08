@@ -74,16 +74,18 @@ class data_prep:
             from data_processing.characters_categories import numerical_category
             self.categories = numerical_category
                 
-        elif alphabetical:
-            from data_processing.characters_categories import alphabetical_category
-            self.categories = alphabetical_category
-        elif lower_case:
-            from data_processing.characters_categories import lower_case_category
-            self.categories = lower_case_category
 
-        elif upper_case:
-            from data_processing.characters_categories import upper_case_category
-            self.categories = upper_case_category
+        # needs further implementation with the label encoder feature
+        # elif alphabetical:
+        #     from data_processing.characters_categories import alphabetical_category
+        #     self.categories = alphabetical_category
+        # elif lower_case:
+        #     from data_processing.characters_categories import lower_case_category
+        #     self.categories = lower_case_category
+
+        # elif upper_case:
+        #     from data_processing.characters_categories import upper_case_category
+        #     self.categories = upper_case_category
            
         else:  # by default, alphanumerical
             from data_processing.characters_categories import alphanumerical_category

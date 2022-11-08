@@ -24,34 +24,51 @@ The first project is to realize an intelligent hand-written character recognizer
 
 ## Datasets Used
 
-## Repo Explanation
-### machine_learning - directories
+## machine_learning - directories
+
 This is the directory containing all the machine learning algorithms, including the datasets that we are using 
 
-#### best_estimators
-Directory containing the saved best estimator as *.joblib.
+### 1. Best_estimators
+Directory containing the saved best estimator as *.joblib. 
+This estimator is obtained by performing a gridsearch for KNN and SVM.
 
-#### data
+
+### 2. Datasets
+Directory containing the datasets used
+Every dataset will contain directories named by the corresponding label. 
+- uploaded_images will contain 1 image, website_upload.png corresponding to the image submitted by the user. It is created when the user submits it. If another image is submited, the original one will be replaced
+
+### 3. Models 
+Directory containing pre-trained models along with their scaler
+
+### 4. Plots
+Containg confusion matrix of SVM.
+! don't work when running the code from backend/base.py 
+
+
+### 5. Processed_data
+
 Directory containg the processed data
 - X_test_uploaded : features of the uploaded/drawn image by the user
 - X_test
 - X_train
 - X_train
 - Y_test
+image drawn by user processed
+- X_test_transformed_knn.pkl
+- X_test_transformed_svm.pkl
 
-#### datasets
-Directory containing the datasets used
-Every dataset will contain directories named by the corresponding label. 
-- uploaded_images will contain 1 image, website_upload.png corresponding to the image submitted by the user. It is created when the user submits it. If another image is submited, the original one will be replaced
+and the scalers of the best learners received after gridsearch
+- SVM_fit_transformed.pkl
+- KNN_fit_transformed.pkl
 
-#### models
-#### svm1
-
-### machine_learning - python scripts
+### 6. Scripts
+#### Data processing
 
 #### characters_categories
 Beautified version of the categories' list. 
 Imported in data_prep to setup the categories
+containes helper to setup the labels, along with mapping_label which maps labels to their corresponding value : ex: a is 11
 
 #### data_prep
 - Goal: pre-process the data and extract its features
@@ -62,11 +79,12 @@ Imported in data_prep to setup the categories
     - directory_training_data: string, directory corrresponding to the training data
     - numerical: boolean, allowing data processing on digits only (dataset must constain directories named by digits)
     - alphabetical: boolean, allowing data processing on alphabetical charactes only (dataset must constain directories named by characters of the alphabet, upper case will correspond to the letter followed by ' i.e.: a' )
-    - lower_case: boolean, allowing data processing on lower case alphabetical charactes only (dataset must constain directories named by characters of the alphabet)
+    - lower_case: boolean, allowing data processing on lower case alphabetical charactes only (dataset must constain directories named by characters of the alphabet) 
     - upper_case: allowing data processing on lower case alphabetical charactes only (dataset must constain directories named by characters of the alphabet, upper case will correspond to the letter followed by ' i.e.: a' )
     - all_features: boolean, set to true will extract all disponible features
     - features_array: string array, corresponds to the features to be extracted
     - uploaded: boolean, if set to true will allow feature extraction for the uploaded images
+    - N.B: label encoder needs to be updated to process the lowercase, uppercase by adding another variable. A big issue arose and it was variables and code hierarchy in Python.
 
 - output: the processed data in the data directory inside of machine_learning
     - X_train.pkl
@@ -77,10 +95,7 @@ Imported in data_prep to setup the categories
 #### helper_data_prep
 Contains helpers to data_prep along with the features extraction methods
 
-N.B.: the d
-- merges bounding rectangles (for example if given i or j)
-- converts images to black and white
-
+### Learners
 #### knn_learner
 - Goal: perfom knn on the prepared data
 - Requires trained data in "/machine_learning/data/*.pkl"
@@ -90,6 +105,7 @@ N.B.: the d
     - Y_train.pkl
 - Setup using a class contructor
     - scaler: string, to either use SplineTransformer or StandardScaler
+    - verbose: terminal output while performing gridsearch
 KNN learner using sklearn
 
 
@@ -110,8 +126,13 @@ KNN learner using sklearn
     - classification_report: boolean, to show the classification report
     - minimal_grid_search: boolean, if set to false will lead to a relative extensive gridsearch
     - k_fold: int, for cross validation
+    - verbose: terminal output while performing gridsearch
 
-#### user processing
+
+#### voting_classifier
+
+
+### user processing
 - Goal: combine learner and data prep script to predict the image uploaded by the user
 
 - staticmethod: prepare_data
@@ -119,11 +140,7 @@ KNN learner using sklearn
 
 - give_label: returns a string: the prediction of the of the image along with its probability
 
-#### voting_classifier
-- AJOUTER 
-
-
-IL RESTE FRONT END, A COMMENTER LE CODE PYTHON, A UPDATE GITIGNORE ET REQUIREMENTS, A VOIR OU METTRE LE VENV, A CHERCHER DES BUGS, DELETE USELESS SCRIPTS, FRONT END USE PRE TRAINED MODEL, BACKEND IMPLEMENT PRE TRAINED MODEL TRAINING, FRONT END FIX LES LABELS DAND LE FEATUTES EX: Aspect Ratio instead of aspect_ratio USING EX AN IF SCRIPT JAVASCRIPT
+IL RESTE FRONT END, A COMMENTER LE CODE PYTHON, A UPDATE GITIGNORE ET REQUIREMENTS, A VOIR OU METTRE LE VENV, A CHERCHER DES BUGS, DELETE USELESS SCRIPTS, F
 - REPORT
 - CHECK IF SOME FEATURES ARE REDUNDANT
 - ADD LEARNER?

@@ -36,14 +36,31 @@ class user_processing:
 
     @staticmethod
     def prepare_data(features=[]):
-        # preparing the dataset using features selected by user
+        #preparing the dataset using features selected by user
         # N.B.: CHANGHE THE mapping_labels (LABEL ENCDOER ) IF YOU ARE USING OTHER THAN ALPHANUMERIACL
+
         p1 = data_prep( features_array=features)
         p1.prep_data()
 
-        # preparing the image uploaded by the user
+        ## preparing the image uploaded by the user
         p1 = data_prep( features_array=features, uploaded=True)
         p1.prep_data()
+
+        ###########################################################################
+        ###########################################################################
+        ##################TUNING
+
+        # p1 = data_prep(test_size=0.5, all_features=True)
+        # p1.prep_data()
+
+        
+        
+        # p1 = data_prep(test_size=0.5, all_features=True, uploaded=True)
+        # p1.prep_data()
+    
+
+        ###########################################################################
+        ###########################################################################
 
 
     def give_label(self):
@@ -70,7 +87,16 @@ class user_processing:
             except:
                 estimator = load("../machine_learning/best_estimators/SVM_BEST.joblib")
                 sc = load(open("../machine_learning/processed_data/SVM_fit_transformed.pkl", "rb"))
-                
+                        # relative path
+            try:
+                X_test = load(open('../processed_data/X_test_uploaded.pkl', 'rb'))
+            except:
+                try:
+                    X_test = load("../machine_learning/processed_data/X_test_uploaded.pkl", 'rb')
+                except:
+                    print("IMAGE NOT PREPROCESSED")
+
+                    
             sc1 = sc
             #transformation for X_test
             X_test = sc1.transform(X_test)
@@ -103,6 +129,15 @@ class user_processing:
             except:
                 estimator = load("../machine_learning/best_estimators/KNN_BEST.joblib")
                 sc = load(open("../machine_learning/processed_data/KNN_fit_transformed.pkl", "rb"))
+                    # relative path
+            try:
+                X_test = load(open('../processed_data/X_test_uploaded.pkl', 'rb'))
+            except:
+                try:
+                    X_test = load("../machine_learning/processed_data/X_test_uploaded.pkl", 'rb')
+                except:
+                    print("IMAGE NOT PREPROCESSED")
+
         
             sc1 = sc
             #transformation for X_Test
