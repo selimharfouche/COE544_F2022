@@ -23,7 +23,7 @@ import numpy as np
 
 from scripts.user_processing import user_processing
 
-user_processing.prepare_data(features=["HOG","histogram"])
+user_processing.prepare_data(features=["histogram"])
 
 up= user_processing(learner="SVM")
 up.give_label()

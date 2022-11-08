@@ -209,7 +209,7 @@ class data_prep:
             int(self.Y) : int(self.Y + self.H), int(self.X) : int(self.X + self.W)
         ]
         cropped_image = cv2.resize(
-            cropped_image, (10, 10), interpolation=cv2.INTER_AREA
+            cropped_image, (32, 32), interpolation=cv2.INTER_AREA
         )
         self.cropped_image=cropped_image
         
@@ -232,16 +232,21 @@ class data_prep:
         }
 
         for feature in self.selected_features:
+            print("WE WILL EXTRACT")
+            print(feature)
             try:
                 features = np.append(features, myFuncs[feature](cropped_image))
+                print("FIRST")
             except:
                 try:
                     features = np.append(
                         features, myFuncs[feature](cropped_image).flatten()
                     )
+                    print("SECOND")
                 except:
                     try:
                         features = np.append(features, myFuncs[feature](24, 8, cropped_image))
+                        print("THIORD")
                     except:
                         pass
                 
