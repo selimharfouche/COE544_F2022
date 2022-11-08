@@ -28,11 +28,18 @@ function Upload_image() {
           window.location =('/train')
         }
         console.log(response);
-     });
-    } catch(error) {
-      console.log(error)
-    }
+     }).then(response => {
+      getAxiosResponse(response.status);
+      if (response.status == 201) {
+        window.location = ('/train')
+      }
+      console.log(response);
+    });
+  } catch (error) {
+    console.log(error)
   }
+}
+
 
   const handleFileSelect = (event) => {
     setSelectedFile(event.target.files[0])
@@ -49,10 +56,14 @@ function Upload_image() {
           </Text>
         </div>
 
-        <div>
+        <div style={{paddingLeft:'650px'}}>
           <form onSubmit={handleSubmit}>
+            <div style={{paddingBottom:'20px'}}>
             <input type="file" name="ABC" onChange={handleFileSelect} />
+            </div>
+            <div>
             <input type="submit" value="Upload File" />
+            </div>
           </form>
         </div>
       </div>

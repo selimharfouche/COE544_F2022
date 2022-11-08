@@ -121,7 +121,7 @@ function Train() {
 
 
   return (
-    <div>
+    <div >
 
       <div className={styles.container}>
         <Title className={styles["header"]}>How do you want to train your AI?</Title>
@@ -130,7 +130,7 @@ function Train() {
         </Text>
       </div>
 
-      <div>
+      <div style={{paddingLeft:'450px'}}>
         <Form
             name="train_data"
             // className={styles}  ##### For styling later
@@ -178,7 +178,6 @@ function Train() {
 
         </Form>
 
-        <div>{axiosResponse}</div>
 
       </div>
 

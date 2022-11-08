@@ -29,7 +29,7 @@ class KNN_class():
             Y_train = load(open('../machine_learning/processed_data/Y_train.pkl', 'rb'))
 
         #Grid search 
-        parameters = {'n_neighbors':list(range(1, 20)) ,'weights': ['uniform', 'distance']}
+        parameters = {'n_neighbors':list(range(1, 6)) ,'weights': ['uniform', 'distance']}
         knn = KNeighborsClassifier()
         grid_search_knn = GridSearchCV(knn, parameters, cv=2, scoring='accuracy', return_train_score=True, verbose=self.verbose)
 
