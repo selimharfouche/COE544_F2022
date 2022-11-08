@@ -167,23 +167,20 @@ class user_processing:
                 sc = load(open("../machine_learning/models/svm_HOG1/std_scaler3.pkl", "rb"))
 
 
-            # by creating a new variable for the scaler, I am not changing the original scaler
-            # failing to do so will result in the same prediction for all X_Tests
-           # sc1 = sc
+            sc1 = sc
         
 
             #transformation for knn
-            X_test = sc.transform(X_test)
-            X_test = sc.transform(X_test)
+            X_test = sc1.transform(X_test)
             
             model_prediction = estimator.predict(X_test)
             label = {i for i in mapping_labels if mapping_labels[i]==model_prediction[0]}
             expected_label=str(label.pop())[0]
-            print ("pre trained expected")
+            print ("Ensemble expected")
             print(expected_label)
 
             probability=np.max(estimator.predict_proba(X_test))
-            print("pre trained probability")
+            print("Ensemble probability")
             print(probability)
 
             return [expected_label,probability]
