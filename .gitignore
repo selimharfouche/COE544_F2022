@@ -15,4 +15,3 @@ backend/__pycache__
 machine_learning/archive_best_estimators/
 machine_learning/datasets/uploaded_images/*.png
 extra_scripts/
-machine_learning/datasets/Alphabet_1k

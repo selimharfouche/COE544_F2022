@@ -221,7 +221,7 @@ def LocalBinaryPatterns(numPoints, radius, image, eps=1e-7):
 #Feature 7: HOG
 def HOG(cropped_image):
 
-    #cv2.imwrite(("cropped_temp.png"), cropped_image)
+    cv2.imwrite(("cropped_temp.png"), cropped_image)
 
     img1 = cv2.cvtColor(cv2.imread("cropped_temp.png"), cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(img1, 127, 255, cv2.THRESH_BINARY_INV)
@@ -229,34 +229,15 @@ def HOG(cropped_image):
     cv2.imwrite(("test.png"), thresh)
 
     # resizing image
-    resized_img = resize(thresh, (8 * 4, 8 * 4))
+    # resized_img = resize(thresh, (8 * 4, 8 * 4))
 
     # creating hog features
     fd, hog_image = hog(cropped_image, orientations=9, pixels_per_cell=(8, 8),
-                        cells_per_block=(4, 4), visualize=True, multichannel=False)
+                        cells_per_block=(2, 2), visualize=True, multichannel=False)
 
-    hog_image = cv2.resize(cropped_image, (32, 32), interpolation=cv2.INTER_AREA)
+    hog_image = cv2.resize(cropped_image, (16, 16), interpolation=cv2.INTER_AREA)
 
     return hog_image
-
-# def HOG(cropped_image):
-
-#     cv2.imwrite(("cropped_temp.png"), cropped_image)
-
-#     img1 = cv2.cvtColor(cv2.imread("cropped_temp.png"), cv2.COLOR_BGR2GRAY)
-#     ret, thresh = cv2.threshold(img1, 127, 255, cv2.THRESH_BINARY_INV)
-
-#     cv2.imwrite(("test.png"), thresh)
-
-#     # resizing image
-#     resized_img = resize(thresh, (8 * 4, 8 * 4))
-
-#     # creating hog features
-#     fd, hog_image = hog(cropped_image, orientations=9, pixels_per_cell=(8, 8),
-#                         cells_per_block=(2, 2), visualize=True, multichannel=False)
-
-#     #hog_image = cv2.resize(cropped_image, (16, 16), interpolation=cv2.INTER_AREA)
-#     return hog_image
 
 ###########################################################################
 ###########################################################################

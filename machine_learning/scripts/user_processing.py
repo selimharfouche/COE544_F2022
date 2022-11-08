@@ -124,31 +124,6 @@ class user_processing:
             return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
 
 
-        if self.learner=="PreTrained":
-            p1 = data_prep(numerical = True, features_array=["HOG"], uploaded=True)
-            p1.prep_data()
-            print("PREPPED HOG")
-
-            # relative path
-            try:
-                estimator = load("../models/svm_HOG/svm_model.sav")
-                sc = load(open("../models/svm_HOG/std_scaler.bin", "rb"))
-            except:
-                estimator = load("../machine_learning/models/svm_HOG/svm_model.sav")
-                sc = load(open("../machine_learning/models/svm_HOG/std_scaler.bin", "rb"))
-            
-            print("SICCCESSFULL IMPORTED MODEL")
-            X_test = sc.transform(X_test)
-            print ("pre trained SVM expected label")
-            print(estimator.predict(X_test))
-            print("pre trained probability")
-            print(np.max(estimator.predict_proba(X_test)))
-
-                
-            return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
-            
-
-
             
         
 

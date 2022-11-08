@@ -44,7 +44,6 @@ def my_profile():
 # save drawn image 
 @api.route('/save-drawn-image',methods=['GET', 'POST'])
 def drawn_Image():
-    print("savinf drawn image")
     uploaded_file = request.form["drawnImage"]
     print (str(uploaded_file[22:]))
     #print(uploaded_file)
@@ -90,8 +89,7 @@ def test():
     res = features.strip('][').split(',')
     print("features selected")
     print(res)
-    if training_algorithm!="PreTrained":
-        user_processing.prepare_data(features=res)
+    user_processing.prepare_data(features=res)
     up= user_processing(learner=training_algorithm) 
     return str(up.give_label())
     
