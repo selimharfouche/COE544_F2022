@@ -22,9 +22,11 @@ import numpy as np
 try:
     # running from Main.py
     from data_processing.data_prep import data_prep
+    from data_processing.characters_categories import mapping_labels
 except:
     # running from flask, base.py
     from machine_learning.scripts.data_processing.data_prep import data_prep
+    from machine_learning.scripts.data_processing.characters_categories import mapping_labels
 
 
 class user_processing:
@@ -35,12 +37,12 @@ class user_processing:
     @staticmethod
     def prepare_data(features=[]):
         # preparing the dataset using features selected by user
-        # N.B.: WE ARE USING NUMERICAL FOR THE SPEED
-        p1 = data_prep( numerical=True,features_array=features)
+        # N.B.: CHANGHE THE mapping_labels (LABEL ENCDOER ) IF YOU ARE USING OTHER THAN ALPHANUMERIACL
+        p1 = data_prep( features_array=features)
         p1.prep_data()
 
         # preparing the image uploaded by the user
-        p1 = data_prep(numerical = True, features_array=features, uploaded=True)
+        p1 = data_prep( features_array=features, uploaded=True)
         p1.prep_data()
 
 
@@ -52,10 +54,12 @@ class user_processing:
             X_test = load("../machine_learning/processed_data/X_test_uploaded.pkl", 'rb')
 
         if self.learner=="SVM":
+            # Setting up svm
             # relative import
             from learners.svm_learner import SVM_class
             svm = SVM_class(learner="SVC",minimal_grid_search=False,scaler="te")
             svm.train()
+            # loading trained models and scaler
             # relative path
             try:
                 estimator = load("../best_estimators/SVM_BEST.joblib")
@@ -64,22 +68,31 @@ class user_processing:
                 estimator = load("../machine_learning/best_estimators/SVM_BEST.joblib")
                 sc = load(open("../machine_learning/processed_data/SVM_fit_transformed.pkl", "rb"))
                 
+            sc1 = sc
+            #transformation for X_test
+            X_test = sc1.transform(X_test)
 
-            #transformation for svm
-            X_test = sc.transform(X_test)
+            # predicting data if everything but lowercase & uppercase
+            mapping_labels2 = mapping_labels
+            label = {i for i in mapping_labels2 if mapping_labels2[i]==model_prediction[0]}
+            expected_label=str(label.pop())[0]
+            print ("SVM expected")
+            print(expected_label)
 
-            print ("SVM expected label")
-            print(estimator.predict(X_test))
+            probability=np.max(estimator.predict_proba(X_test))
             print("SVM probability")
-            print(np.max(estimator.predict_proba(X_test)))
-            return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
+            print(probability)
+
+            return [expected_label,probability]
             
         
         if self.learner=="KNN":
+            # setting up knn
             # relative import
             from learners.knn_learner import KNN_class
             knn = KNN_class(scaler="te")
             knn.train()
+            # loading up trained model and scaler
             # relative path
             try:
                 estimator = load("../best_estimators/KNN_BEST.joblib")
@@ -88,20 +101,31 @@ class user_processing:
                 estimator = load("../machine_learning/best_estimators/KNN_BEST.joblib")
                 sc = load(open("../machine_learning/processed_data/KNN_fit_transformed.pkl", "rb"))
         
+            sc1 = sc
+            #transformation for X_Test
+            X_test = sc1.transform(X_test)
 
-            #transformation for knn
-            X_test = sc.transform(X_test)
+            # predicting data if everything but lowercase & uppercase
+            model_prediction = estimator.predict(X_test)
 
-            print ("KNN expected label")
-            print(estimator.predict(X_test))
+            print("PRDICIOT")
+            print(model_prediction)
+
+            label = {i for i in mapping_labels if mapping_labels[i]==model_prediction[0]}
+            print("LABEL")
+            print(label)
+            expected_label=str(label.pop())[0]
+            print("POPPED LABEL UPDATE")
+            print(label)
+            print ("KNN expected")
+            print(expected_label)
+
+            probability=np.max(estimator.predict_proba(X_test))
             print("KNN probability")
-            print(np.max(estimator.predict_proba(X_test)))
-            try:
-                return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
-            # therefore it is a linear SV
-            except:
-                return estimator.predict(X_test)
+            print(probability)
 
+            return [expected_label,probability]
+            
 
         
         if self.learner=="ensemble":
@@ -116,16 +140,51 @@ class user_processing:
             except:
                 estimator = load("../machine_learning/best_estimators/ENSEMBLE.joblib")
                 
-            print("ensemble expected label")
-            print(estimator.predict(X_test))
-            print("ensemble probability")
-            print(np.max(estimator.predict_proba(X_test)))
 
-            return [estimator.predict(X_test),np.max(estimator.predict_proba(X_test))]
+            model_prediction = estimator.predict(X_test)
+            label = {i for i in mapping_labels if mapping_labels[i]==model_prediction[0]}
+            expected_label=str(label.pop())[0]
+            print ("Ensemble expected")
+            print(expected_label)
 
+            probability=np.max(estimator.predict_proba(X_test))
+            print("Ensemble probability")
+            print(probability)
+
+            return [expected_label,probability]
 
             
+        if self.learner=="PreTrained":
+            p1 = data_prep(numerical = True, features_array=["sobel_edge","HOG","pixel_intensity"], uploaded=True)
+            #p1 = data_prep(numerical = True, features_array=["HOG"], uploaded=True)
+            p1.prep_data()
+           
+            try:
+                estimator = load("../machine_learning/models/svm_HOG1/svm_model3.joblib")
+                sc = load(open("../models/svm_HOG1/std_scaler3.pkl", "rb"))
+            except:
+                estimator = load("../machine_learning/models/svm_HOG1/svm_model3.joblib")
+                sc = load(open("../machine_learning/models/svm_HOG1/std_scaler3.pkl", "rb"))
+
+
+            sc1 = sc
         
+
+            #transformation for knn
+            X_test = sc1.transform(X_test)
+            
+            model_prediction = estimator.predict(X_test)
+            label = {i for i in mapping_labels if mapping_labels[i]==model_prediction[0]}
+            expected_label=str(label.pop())[0]
+            print ("Ensemble expected")
+            print(expected_label)
+
+            probability=np.max(estimator.predict_proba(X_test))
+            print("Ensemble probability")
+            print(probability)
+
+            return [expected_label,probability]
+
 
 
 

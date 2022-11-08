@@ -49,9 +49,9 @@ function Train() {
 
                 
                 Swal.fire({
-                    title: obtainedData.substring(9,10),
-                    text: 'with confidence: '+obtainedData.substring(14,obtainedData.length-2),
-                    icon: 'error',
+                    title: obtainedData.substring(3,4),
+                    text: 'with confidence: '+obtainedData.substring(8,obtainedData.length-2),
+                    icon: 'success',
                     confirmButtonText: 'Cool'
                   })
   

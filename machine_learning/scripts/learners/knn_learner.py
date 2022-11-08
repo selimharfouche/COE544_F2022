@@ -9,7 +9,7 @@ from joblib import load, dump
 
 
 class KNN_class():
-    def __init__(self,scaler="ST",verbose=0):
+    def __init__(self,scaler="ST",verbose=10):
         self.scaler=scaler
         self.verbose = verbose
 

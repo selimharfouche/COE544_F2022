@@ -1,3 +1,4 @@
+from sklearn import preprocessing
 numerical_category = [
     "0",
     "1",
@@ -192,3 +193,7 @@ alphanumerical_category = [
     "y'",
     "z'",
 ]
+abc =alphanumerical_category
+le = preprocessing.LabelEncoder()
+le.fit_transform(abc)
+mapping_labels = dict(zip(le.classes_, range(len(le.classes_))))

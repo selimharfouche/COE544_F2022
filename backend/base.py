@@ -93,6 +93,7 @@ def test():
         user_processing.prepare_data(features=res)
         print("NOT PRETRAING")
     up= user_processing(learner=training_algorithm) 
-    return str(up.give_label())
+    abc = str(up.give_label())
+    return abc
     
 

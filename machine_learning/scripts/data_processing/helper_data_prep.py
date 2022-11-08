@@ -235,7 +235,7 @@ def HOG(cropped_image):
     fd, hog_image = hog(cropped_image, orientations=9, pixels_per_cell=(8, 8),
                         cells_per_block=(2, 2), visualize=True, multichannel=False)
 
-    hog_image = cv2.resize(cropped_image, (16, 16), interpolation=cv2.INTER_AREA)
+    hog_image = cv2.resize(cropped_image, (32, 32), interpolation=cv2.INTER_AREA)
 
     return hog_image
 
