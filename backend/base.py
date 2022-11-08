@@ -83,7 +83,7 @@ def train():
 @api.route('/get-label',methods=['GET', 'POST'])
 def test():
     training_algorithm = request.form["trainingAlgo"]
-    print ("Training algorithm selected")
+    print ("Training algorithm selected-BASE.py")
     print(training_algorithm)
     features = request.form["features"]
     res = features.strip('][').split(',')
@@ -92,6 +92,7 @@ def test():
     if training_algorithm!="PreTrained":
         user_processing.prepare_data(features=res)
         print("NOT PRETRAING")
+    print("CALLING user_processing(learner=training_algorithm) FROM base.py")
     up= user_processing(learner=training_algorithm) 
     abc = str(up.give_label())
     return abc

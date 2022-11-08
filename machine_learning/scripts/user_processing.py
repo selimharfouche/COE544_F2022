@@ -51,7 +51,10 @@ class user_processing:
         try:
             X_test = load(open('../processed_data/X_test_uploaded.pkl', 'rb'))
         except:
-            X_test = load("../machine_learning/processed_data/X_test_uploaded.pkl", 'rb')
+            try:
+                X_test = load("../machine_learning/processed_data/X_test_uploaded.pkl", 'rb')
+            except:
+                print("IMAGE NOT PREPROCESSED")
 
         if self.learner=="SVM":
             # Setting up svm
@@ -155,9 +158,21 @@ class user_processing:
 
             
         if self.learner=="PreTrained":
-            p1 = data_prep(numerical = True, features_array=["sobel_edge","HOG","pixel_intensity"], uploaded=True)
+            
+            print("pre-trained ONNNNNN")
+            
             #p1 = data_prep(numerical = True, features_array=["HOG"], uploaded=True)
+            p1 = data_prep(numerical = True, features_array=["sobel_edge","HOG","pixel_intensity"], uploaded=True)
             p1.prep_data()
+            # relative path
+            try:
+                X_test = load(open('../processed_data/X_test_uploaded.pkl', 'rb'))
+            except:
+                try:
+                    X_test = load("../machine_learning/processed_data/X_test_uploaded.pkl", 'rb')
+                except:
+                    print("IMAGE NOT PREPROCESSED")
+
            
             try:
                 estimator = load("../machine_learning/models/svm_HOG1/svm_model3.joblib")
