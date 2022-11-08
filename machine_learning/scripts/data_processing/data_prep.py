@@ -209,7 +209,7 @@ class data_prep:
             int(self.Y) : int(self.Y + self.H), int(self.X) : int(self.X + self.W)
         ]
         cropped_image = cv2.resize(
-            cropped_image, (10, 10), interpolation=cv2.INTER_AREA
+            cropped_image, (32, 32), interpolation=cv2.INTER_AREA
         )
         self.cropped_image=cropped_image
         
