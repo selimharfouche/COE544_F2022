@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: auto;
+  
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+  
+}
+
+.text {
+  color: '#00000073';
+  text-align: center;
+}
+
+/* .box {
+    display: inline-block;
+    border: 1px solid #000;
+  } */
+  

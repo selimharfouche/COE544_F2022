@@ -1,0 +1,535 @@
+/////////////////////////////////////////////////////////
+feature1=pixel_intensity(cropped_image).flatten()
+-> only pixel intensity feature
+
+/////////////////////////////////////////////////////////
+clf = svm.SVC()
+sc = SplineTransformer()
+
+
+
+/////////////////////////////////////////////////////////
+Cs = [0.1, 1, 10, 100, 1000]
+Gammas = [1, 0.1, 0.01, 0.001, 0.0001]
+Kernels = ['rbf', 'poly', 'sigmoid']
+/////////////////////////////////////////////////////////
+
+
+classes:
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+A_learner_svm.py 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+############################################################
+# Imports
+
+
+from sklearn import svm, metrics
+from sklearn.metrics import classification_report
+from sklearn.preprocessing import StandardScaler, SplineTransformer
+from sklearn.svm import SVC
+from A_data_prep import X_train, X_test, Y_train, Y_test
+
+from joblib import dump
+
+
+class SVM_class:
+    
+    #choosing the learner: svm SVC
+    clf = svm.SVC()
+
+    ###############################################################################
+    #NuSVC
+    #clf = svm.NuSVC()
+    #Linear SVC()
+    #clf = svm.LinearSVC()
+    ###############################################################################
+
+    #choosing preprocessing
+    sc = SplineTransformer()
+    ###############################################################################
+    #sc = StandardScaler()
+    ###############################################################################
+
+
+
+
+    # Compute knot positions of splines.
+    # transform data
+    # https://datascience.stackexchange.com/questions/12321/whats-the-difference-between-fit-and-fit-transform-in-scikit-learn-models
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+
+
+    # Learn the digits on the train subset
+    # https://datascience.stackexchange.com/questions/87361/when-should-i-use-fitx-train-and-when-should-i-fit-x-train-y-train
+    clf.fit(X_train, Y_train)
+
+    # Predict the value of the digit on the test subset
+    # https://stackoverflow.com/questions/62646058/how-does-the-predict-method-work-on-scikit-learn
+    predicted = clf.predict(X_test)
+
+    # https://scikit-learn.org/stable/modules/svm.html#scores-probabilities
+    clf = svm.SVC(probability=True) 
+
+
+
+    ###############################################################################
+    # Classification report
+    # print(
+    #     f"Classification report for classifier {clf}:\n"
+    #     f"{metrics.classification_report(Y_test, predicted,zero_division=1)}\n"
+    # )
+
+    ###############################################################################
+    # We can also plot a :ref:`confusion matrix <confusion_matrix>` of the
+    # true digit values and the predicted digit values.
+
+    # disp = metrics.ConfusionMatrixDisplay.from_predictions(Y_test, predicted)
+    # disp.figure_.suptitle("Confusion Matrix")
+    #print(f"Confusion matrix:\n{disp.confusion_matrix}")
+
+    #plt.show()
+    ###############################################################################
+
+
+    from sklearn.model_selection import GridSearchCV
+    # https://www.vebuso.com/2020/03/svm-hyperparameter-tuning-using-gridsearchcv/
+    # defining parameter range
+    Cs = [0.1, 1, 10, 100, 1000]
+    Gammas = [1, 0.1, 0.01, 0.001, 0.0001]
+    Kernels = ['rbf', 'poly', 'sigmoid']
+
+    param_grid = {'C': Cs, 
+                'gamma': Gammas,
+                'kernel': Kernels} 
+
+    # param_grid = {'C': [0.1, 1, 10, 100, 1000], 
+    #               'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+    #               'kernel': ['rbf']} 
+
+
+    # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV
+    grid = GridSearchCV(SVC(), param_grid, refit = True, cv = 10,return_train_score=True, verbose = 10)
+    
+    # fitting the model for grid search
+    grid.fit(X_train, Y_train)
+
+
+    # ############################
+    # # print best parameter after tuning
+    # print("Grid best parameters:")
+    # print(grid.best_params_)
+    # ############################
+    
+    # print how our model looks after hyper-parameter tuning
+    svm_best=grid.best_estimator_
+    print("Grid best estimator")
+    print(svm_best)
+
+    # save the best parameters of the gridsearch
+    dump(svm_best, "best_estimators/svm_best.joblib")
+    print ("parameters saved in best_estimators/svm_best.joblib ")
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # scores = [x[1] for x in clf.grid_scores_]
+    # scores = np.array(scores).reshape(len(Cs), len(Gammas))
+
+    # for ind, i in enumerate(Cs):
+    #     plt.plot(Gammas, scores[ind], label='C: ' + str(i))
+    #     plt.legend()
+    #     plt.xlabel('Gamma')
+    #     plt.ylabel('Mean score')
+    #     plt.show()
+    
+    # # print classification report
+    print(classification_report(Y_test, grid_predictions))
+
+classes:
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+A_data_prep.py 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+############################################################
+######################################################################
+# imports
+import random
+import cv2
+import numpy as np
+import os
+import glob
+import pickle
+from sklearn.model_selection import *
+from A_helper_data_prep import *
+import matplotlib.pyplot as plt
+import pandas as pd
+
+######################################################################
+# Constants
+DIRECTORY_TRAINING_DATA = 'Images/'
+
+#When iterating through the training data looking for images
+Windows_Iteration ='\\*.png'
+Mac_Iteration='//*.png'
+
+######################################################################
+
+# Categories labeling
+# Each directory name represents the label of the data we are working on 
+categories = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+data = []
+counter = 0
+
+######################################################################
+#Append images to data
+# read the input images
+for category in categories:
+ path = os.path.join(DIRECTORY_TRAINING_DATA, category)
+ label = categories.index(category)
+
+ for img in glob.glob(path + Mac_Iteration):
+  if (img is not None):
+    img0 = cv2.imread(img)
+
+
+
+    ###### Skew correction
+
+    # from A_skew_correction import correct_skew
+    # img0 = correct_skew(img0)
+
+
+
+
+    ####### Plotting debug
+    # fig = plt.figure()
+    # ax1 = fig.add_subplot(3,3,1)
+    # ax1.set_title("original image")
+    # ax1.imshow(img0)
+    
+   
+    # convert the image to BW
+    thresh = convert_BW(img0)
+
+
+
+    ####### Plotting debug
+    # ax2 = fig.add_subplot(3,3,2)
+    # ax2.set_title("BW")
+    # ax2.imshow(thresh)
+    
+   
+    # Finding contours
+    contours,_ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+
+    if(len(contours)>1):
+     # get first 2 contour points (base cases)
+
+     # compute rectangle (minimum area)
+     x0, y0, w0, h0 = cv2.boundingRect(contours[0])
+     rect0 = x0, y0, w0, h0
+
+     x1, y1, w1, h1 = cv2.boundingRect(contours[1])
+     rect1 = x1, y1, w1, h1
+
+
+     # merge rectangles
+     X, Y, W, H = union(rect0, rect1)
+     rect_temp = X, Y, W, H
+
+     for cnt0 in contours[2::1]:
+
+         # get the rest of the contour points
+         x0, y0, w0, h0 = cv2.boundingRect(cnt0)
+         rect2 = x0, y0, w0, h0
+
+         # merge rectangles
+         X, Y, W, H = union(rect_temp, rect2)
+         rect_temp = X, Y, W, H
+
+
+    else:
+     # get contour (in case of 1 rectangle)
+     cnt0 = contours[0]
+     cnt1 = 0
+
+     # compute rectangle (minimum area)
+     X, Y, W, H = cv2.boundingRect(cnt0)
+
+    # crop image following the rectangle
+    cropped_image = thresh[int(Y):int(Y + H), int(X):int(X + W)]
+
+
+
+
+    ####### Plotting debug
+    # ax3 = fig.add_subplot(3,3,3)
+    # ax3.set_title("Bounded image")
+    # ax3.imshow(cropped_image)
+    
+    
+
+    # resize image
+    cropped_image = cv2.resize(cropped_image, (10,10), interpolation=cv2.INTER_AREA)
+
+
+
+
+    ####### Plotting debug
+    # ax4 = fig.add_subplot(3,3,4)
+    # ax4.set_title("cropeed image")
+    # ax4.imshow(cropped_image)
+
+    ####### Plotting debug
+    # ax5 = fig.add_subplot(3,3,5)
+    # ax5.set_title("Skew correction")
+    # ax5.imshow(cropped_image)
+    # plt.show()
+    #data.append([LocalBinaryPatterns(24,8,cropped_image), label])
+
+
+    feature1=pixel_intensity(cropped_image).flatten()
+
+
+
+    # feature2=histogram(cropped_image).flatten()
+    # features_appended = np.append(feature1,feature2)
+
+
+
+   # df = pd.DataFrame(np.vstack([feature1, feature2]).T, columns=['feature1', 'feature2'])
+    
+    data.append([feature1,label])
+    counter = counter + 1
+   
+
+
+#write data into pickle file
+pick_in = open('data.pickle','wb')
+pickle.dump(data, pick_in)
+pick_in.close()
+
+pick_in = open('data.pickle', 'rb')
+data = pickle.load(pick_in)
+pick_in.close()
+
+random.shuffle(data)
+features = []
+labels = []
+
+for features1, label in data:
+    features.append(features1)
+    #features.append(feature2)
+    labels.append(label)
+    
+
+
+# Separate the data into training and test data sets
+
+X_train, X_test, Y_train, Y_test = train_test_split(features, labels, test_size=0.8)
+
+
+classes:
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+A_helper_data_prep.py 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# Helpers
+# function that merges 2 rectangles
+# takes as input two bounding rectangles and returns them merged
+import cv2
+import numpy as np
+def union(a, b):
+ x = min(a[0], b[0])
+ y = min(a[1], b[1])
+ w = max(a[0] + a[2], b[0] + b[2]) - x
+ h = max(a[1] + a[3], b[1] + b[3]) - y
+ return (x, y, w, h)
+
+
+def convert_BW(image):
+    img1 = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    ret, thresh = cv2.threshold(img1, 0, 255, cv2.THRESH_BINARY_INV)
+    return thresh
+###########################################################################
+###########################################################################
+# Feature #1: Aspect Ratio
+
+# images are stored in 2D arrays
+# image.shape is (n,m). So image.shape[0] is n.
+
+# aspect ratio (in decimal format)
+def aspect_ratio(cropped_image):
+    # number of columns / number of rows
+    ar = ((float)(cropped_image.shape[1] / cropped_image.shape[0]))
+    return ar
+
+# aspect ratio (in fraction format)
+def calculate_aspect(width: int, height: int) -> str:
+    def gcd(a, b):
+        return a if b == 0 else gcd(b, a % b)
+
+    r = gcd(width, height)
+    x = int(width / r)
+    y = int(height / r)
+
+    print(f"{x}:{y}")
+    print()
+    return
+###########################################################################
+###########################################################################
+
+# Feature 2: Pixel Count, Pixel Percent
+# takes as input the cropped image
+# returns the percentage of black pixels in it
+
+###########################################################################
+def top_half_img(cropped_image):
+    top_half = cropped_image[int(0):int(cropped_image.shape[0] / 2), int(0):int(cropped_image.shape[1])]
+
+    # get all non black Pixels
+    cntNotBlack = cv2.countNonZero(top_half)
+
+    # get pixel count of image
+    height, width = top_half.shape
+    cntPixels = height * width
+
+    # compute all black pixels
+    cntBlack = cntPixels - cntNotBlack
+    percent_black = int((cntBlack / cntPixels) * 100)
+
+    return percent_black
+
+###########################################################################
+def lower_half_img(cropped_image):
+    lower_half = cropped_image[int(cropped_image.shape[0] / 2):int(cropped_image.shape[0]), int(0):int(cropped_image.shape[1])]
+
+    # get all non black Pixels
+    cntNotBlack = cv2.countNonZero(lower_half)
+
+    # get pixel count of image
+    height, width = lower_half.shape
+    cntPixels = height * width
+
+    # compute all black pixels
+    cntBlack = cntPixels - cntNotBlack
+    percent_black = (cntBlack / cntPixels) * 100
+
+    return percent_black
+
+###########################################################################
+def right_half_img(cropped_image):
+    right_half = cropped_image[int(0):int(cropped_image.shape[0]), int(cropped_image.shape[1] / 2):int(cropped_image.shape[1])]
+
+    # get all non black Pixels
+    cntNotBlack = cv2.countNonZero(right_half)
+
+    # get pixel count of image
+    height, width = right_half.shape
+    cntPixels = height * width
+
+    # compute all black pixels
+    cntBlack = cntPixels - cntNotBlack
+    percent_black = (cntBlack / cntPixels) * 100
+
+    return percent_black
+
+###########################################################################
+def left_half_img(cropped_image):
+    left_half = cropped_image[int(0):int(cropped_image.shape[0]), int(0):int(cropped_image.shape[1] / 2)]
+
+    # get all non black Pixels
+    cntNotBlack = cv2.countNonZero(left_half)
+
+    # get pixel count of image
+    height, width = left_half.shape
+    cntPixels = height * width
+
+    # compute all black pixels
+    cntBlack = cntPixels - cntNotBlack
+    percent_black = (cntBlack / cntPixels) * 100
+
+    return percent_black
+
+
+###########################################################################
+###########################################################################
+# Feature 3: projection histogram
+def histogram(cropped_image):
+    cropped_image[cropped_image == 0] = 1
+    cropped_image[cropped_image == 255] = 0
+
+    # Calculate horizontal projection
+    hor_proj = np.sum(cropped_image, axis=1)
+
+    height, width = cropped_image.shape
+
+    blankImage = np.zeros((height, width), np.uint8)
+
+    # Draw a line for each row
+    for row in range(height):
+        cv2.line(blankImage, (0, row), (int(hor_proj[row] * width / height), row), (255, 255, 255), 1)
+
+    # Save result
+    blankImage = cv2.resize(blankImage, (128, 128), interpolation=cv2.INTER_AREA)
+    
+    
+    return blankImage
+
+###########################################################################
+# Feature 5
+# Pixel intensity
+def pixel_intensity(cropped_image):
+    n_samples = len(cropped_image)
+    cropped_image_reshaped = cropped_image.reshape((n_samples, -1))
+    return cropped_image_reshaped
+###########################################################################
+###########################################################################
+###########################################################################
+###########################################################################
+
+def sobel_edge(cropped_image):
+    # Sobel Edge Detection
+    # sobelx = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5) # Sobel Edge Detection on the X axis
+    # sobely = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=0, dy=1, ksize=5) # Sobel Edge Detection on the Y axis
+    sobelxy = cv2.Sobel(src=cropped_image, ddepth=cv2.CV_64F, dx=1, dy=1, ksize=5) # Combined X and Y Sobel Edge Detection
+    return sobelxy
+
+def canny_edge(cropped_image):
+    edges = cv2.Canny(image=cropped_image, threshold1=100, threshold2=200) # Canny Edge Detection
+    return edges
+
+from skimage import feature
+
+
+def LocalBinaryPatterns(numPoints, radius, image, eps=1e-7):
+	
+	lbp = feature.local_binary_pattern(image, numPoints, radius, method="uniform")
+	(hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, numPoints + 3), range=(0, numPoints + 2))
+	
+	hist = hist.astype("float")
+	hist /= (hist.sum() + eps)
+    
+	# return the histogram of Local Binary Patterns
+	return hist

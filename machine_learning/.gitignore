@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pickle
+**/*.pickle
+.DS_Store
+.idea/
+data/*.pkl
+models/*.sav
+.vscode
+/venv
+/venv/
+extra_scripts/

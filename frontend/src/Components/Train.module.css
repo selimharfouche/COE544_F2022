@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 30vh;
+    overflow: auto;
+    
+  }
+
+.header {
+    margin-bottom: 50px;
+}
+
+.text{
+  color: #00000073;
+  font-size: medium;
+}
